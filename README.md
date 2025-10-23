@@ -39,6 +39,9 @@ uvx ruff format --check .
 
 # Check for linting errors
 uvx ruff check .
+
+# Check for type errors
+uvx --with pydantic --with flask mypy .
 ```
 
 **Apply fixes:**

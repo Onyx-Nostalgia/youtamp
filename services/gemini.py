@@ -44,7 +44,11 @@ Example MM:SS format output:
 """
 
 
-def generate_prompt(captions, additional_instructions, video_id):
+def generate_prompt(
+    captions: str,
+    additional_instructions: str,
+    video_id: str,
+) -> str:
     transcript = f"""
     Here is the transcript:
     {captions}
@@ -57,7 +61,11 @@ def generate_prompt(captions, additional_instructions, video_id):
     return additional_instructions + transcript
 
 
-def evaluate_timestamps(captions, additional_instructions="", video_id=""):
+def evaluate_timestamps(
+    captions: str,
+    additional_instructions: str = "",
+    video_id: str = "",
+) -> list[str]:
     prompt = generate_prompt(captions, additional_instructions, video_id)
     file_io.save_prompt_to_file(prompt, video_id)
 
@@ -66,7 +74,7 @@ def evaluate_timestamps(captions, additional_instructions="", video_id=""):
         contents=prompt,
         config={**generation_config, "system_instruction": system_instruction},
     )
-    file_io.save_response_to_file(response, video_id)
+    file_io.save_response_to_file(response.text, video_id)
 
     my_timestamps: list[Timestamp] = response.parsed
 

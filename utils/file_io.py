@@ -1,9 +1,14 @@
+from collections.abc import Iterable
 from pathlib import Path
 
 import config
 
 
-def write_file(data, filename: str, base_dir_name: str = config.ARTIFACTS_DIR):
+def write_file(
+    data: str,
+    filename: str,
+    base_dir_name: Path = config.ARTIFACTS_DIR,
+) -> None:
     file_path = Path(base_dir_name) / filename
     directory_path = file_path.parent
     directory_path.mkdir(parents=True, exist_ok=True)
@@ -12,7 +17,7 @@ def write_file(data, filename: str, base_dir_name: str = config.ARTIFACTS_DIR):
     print(f"💾 File saved: `{file_path}`")
 
 
-def read_file(filename: str, base_dir_name: str = config.ARTIFACTS_DIR):
+def read_file(filename: str, base_dir_name: Path = config.ARTIFACTS_DIR) -> str:
     file_path = Path(base_dir_name) / filename
     with Path.open(file_path) as f:
         data = f.read()
@@ -20,27 +25,31 @@ def read_file(filename: str, base_dir_name: str = config.ARTIFACTS_DIR):
     return data
 
 
-def save_timestamps_to_file(timestamps, folder_name):
+def save_timestamps_to_file(
+    timestamps: Iterable[str],
+    folder_name: str,
+) -> None:
     filename = f"{folder_name}/timestamps.txt"
     if config.SAVE_RESPONSE and timestamps:
         timestamps_text = "\n".join(timestamps)
         write_file(timestamps_text, filename)
 
 
-def save_prompt_to_file(prompt, folder_name):
+def save_prompt_to_file(prompt: str, folder_name: str) -> None:
     filename = f"{folder_name}/prompt.txt"
     if config.SAVE_PROMPT:
         write_file(prompt, filename)
 
 
-def load_prompt_from_file(folder_name):
+def load_prompt_from_file(folder_name: str) -> str | None:
     filename = f"{folder_name}/prompt.txt"
     if config.LOAD_PROMPT:
         prompt = read_file(filename)
         return prompt
+    return None
 
 
-def save_response_to_file(response, folder_name):
+def save_response_to_file(response: str, folder_name: str) -> None:
     filename = f"{folder_name}/response.json"
     if config.SAVE_RESPONSE:
         write_file(response, filename)
