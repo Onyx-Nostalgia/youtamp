@@ -1,13 +1,276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Youtamp</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Font Import -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100..900&display=swap');
+    </style>
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Tailwind CSS 4 Custom Theme -->
+    <style type="text/tailwindcss">
+        @theme {
+            --color-dark-gray: #393E41;
+            --color-light-gray: #e7e7e7; /* #D3D0CB; */
+            --color-accent: #E2C044;
+            --color-muted-blue: #587B7F;
+            --color-dark-green: #1E2019;
+            --font-sans: 'Noto Sans Thai Looped', sans-serif;
+        }
+    </style>
 </head>
-<body>
-    <h1>Welcome to Youtamp!</h1>
-    <p>This is a placeholder for your Flask application.</p>
+
+<body class="bg-light-gray overflow-x-hidden">
+
+    <!-- Container หลักของแอป -->
+    <div class="relative min-h-screen">
+
+        <!-- ===== ส่วนที่ 1: Navigation Bar ===== -->
+        <header class="relative z-10 w-full px-4 py-5 sm:px-8 md:px-12">
+            <nav class="container mx-auto flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center space-x-2">
+                    <!-- Project Name + Mock Icon -->
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"
+                            fill="var(--color-accent)" />
+                        <path d="M10 17L10 7L16 10L10 17Z" fill="var(--color-dark-gray)" />
+                    </svg>
+                    <span class="text-2xl font-bold text-dark-gray">Youtamp</span>
+                </a>
+
+                <!-- Theme and Language Toggles -->
+                <div class="flex items-center space-x-4">
+                    <!-- Theme Toggle (Placeholder) -->
+                    <button class="p-2 rounded-full hover:bg-light-gray-200 transition-colors">
+                        <svg class="w-6 h-6 text-dark-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                            </path>
+                        </svg>
+                    </button>
+                    <!-- Language Toggle (Placeholder) -->
+                    <button class="p-2 rounded-full hover:bg-light-gray-200 transition-colors">
+                        <svg class="w-6 h-6 text-dark-gray" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.5 10a18.022 18.022 0 01-3.5-4.5M15 9l-3 3m0 0l-3-3m3 3v12">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Hamburger Menu (สำหรับจอเล็ก) -->
+                <div class="md:hidden">
+                    <svg class="w-8 h-8 text-dark-gray" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                        <path d="M4 6h16M4 12h16m-7 6h7"></path>
+                    </svg>
+                </div>
+            </nav>
+        </header>
+
+        <!-- ===== ส่วนที่ 2: Hero Section (Landing Page) ===== -->
+        <main class="relative z-0">
+            <!-- พื้นหลัง Blob Shapes -->
+            <div class="blob-container">
+                <!-- Blob 1 (สร้างจาก SVG) -->
+                <svg class="hero-blob-1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--color-muted-blue)"
+                        d="M48.1,-62.4C61.8,-53.4,72.1,-38.7,75.1,-22.7C78.2,-6.7,73.9,10.7,66.3,25.9C58.7,41.1,47.8,54.1,34.5,62.8C21.3,71.5,5.6,76,-10.1,76.1C-25.9,76.1,-41.7,71.7,-53.6,62C-65.5,52.3,-73.4,37.3,-76.4,21.5C-79.3,5.7,-77.1,-10.8,-69.5,-24.8C-62,-38.8,-49,-50.2,-35.6,-58.5C-22.2,-66.8,-8.3,-72,6.5,-73.9C21.4,-75.8,42.7,-74.6,48.1,-62.4Z"
+                        transform="translate(100 100)" />
+                </svg>
+                <!-- Blob 2 (สร้างจาก SVG) -->
+                <svg class="hero-blob-2" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="var(--color-accent)"
+                        d="M49.2,-62.4C63.7,-52.7,75.4,-38,78.2,-21.7C81,-5.4,74.9,12.5,65.3,27.1C55.7,41.8,42.6,53.2,28.2,61.9C13.8,70.5,-1.9,76.3,-18.2,74.7C-34.6,73.1,-51.5,64.1,-62.6,50.7C-73.6,37.4,-78.8,18.7,-78,0.4C-77.2,-17.9,-70.5,-35.8,-58.5,-48C-46.6,-60.2,-29.5,-66.7,-12.6,-68.9C4.3,-71.2,21.1,-69.3,34.7,-67.2C48.3,-65.2,49.2,-72.1,49.2,-62.4Z"
+                        transform="translate(100 100)" />
+                </svg>
+            </div>
+
+            <section id="hero-section" class="container mx-auto px-4 py-2 md:py-16 relative">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+
+                    <!-- คอลัมน์ซ้าย: Image Brand -->
+                    <div id="hero-image-container"
+                        class="flex items-center justify-center transition-all duration-500 ease-in-out">
+                        <img src="/static/images/logo.png" alt="Youtamp Logo" class="w-full">
+                    </div>
+
+                    <!-- คอลัมน์ขวา: Title, Slogan, Input Section -->
+                    <div id="hero-content" class="text-center md:text-left transition-all duration-500 ease-in-out">
+                        <h1 class="text-4xl sm:text-6xl md:text-4xl lg:text-6xl font-bold text-dark-gray leading-tight mb-4">
+                            สร้าง Timestamp YouTube
+                            <span class="text-accent">อย่างง่ายดาย</span>
+                        </h1>
+                        <p class="text-lg text-dark-gray opacity-80 mb-8">
+                            แปลงวิดีโอ YouTube ให้เป็น Timestamp ที่จัดระเบียบ พร้อมสำหรับการแบ่งปัน
+                        </p>
+
+                        <!-- Input Section -->
+                        <div class="space-y-4">
+                            <!-- URL Input -->
+                            <div class="relative">
+                                <input type="text" id="youtube-url"
+                                    class="w-full p-4 pr-12 rounded-full border-2 border-dark-gray focus:border-accent focus:ring-accent focus:outline-none transition-all duration-300"
+                                    placeholder="ใส่ URL YouTube ที่นี่">
+                                <button id="generate-button"
+                                    class="absolute right-2 top-1/2 -translate-y-1/2 bg-accent text-dark-gray font-bold py-2 px-4 rounded-full hover:bg-dark-gray hover:text-accent transition-colors">
+                                    สร้าง
+                                </button>
+                            </div>
+
+                            <!-- Optional Input Section (Collapsible) -->
+                            <div class="bg-light-gray-200 p-4 rounded-lg">
+                                <button id="toggle-optional-input"
+                                    class="w-full flex justify-between items-center text-dark-gray font-semibold py-2">
+                                    <span>ตัวเลือกเพิ่มเติม</span>
+                                    <svg class="w-5 h-5 transform transition-transform duration-300"
+                                        id="optional-input-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </button>
+                                <div id="optional-input-content" class="hidden mt-4 space-y-4">
+                                    <!-- Additional Details -->
+                                    <div>
+                                        <label for="additional-details"
+                                            class="block text-dark-gray text-sm font-bold mb-2">
+                                            รายละเอียดเพิ่มเติม (Optional):
+                                        </label>
+                                        <textarea id="additional-details"
+                                            class="w-full p-3 rounded-lg border-2 border-dark-gray focus:border-accent focus:ring-accent focus:outline-none transition-all duration-300"
+                                            rows="4"
+                                            placeholder="เช่น 'อยากได้ timestamp สัก 10 รายการ', 'เจาะจงเฉพาะส่วนที่เป็นสาระหลัก'"></textarea>
+                                    </div>
+                                    <!-- Language Selection -->
+                                    <div>
+                                        <label for="language-select"
+                                            class="block text-dark-gray text-sm font-bold mb-2">
+                                            ภาษาผลลัพธ์ (Optional):
+                                        </label>
+                                        <select id="language-select"
+                                            class="w-full p-3 rounded-lg border-2 border-dark-gray focus:border-accent focus:ring-accent focus:outline-none transition-all duration-300">
+                                            <option value="auto">ตามภาษาของวิดีโอ (Default)</option>
+                                            <option value="th">ไทย (TH)</option>
+                                            <option value="en">อังกฤษ (EN)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ===== App View Section (Hidden by default, appears after generation) ===== -->
+            <section id="app-view-section" class="hidden container mx-auto px-4 py-16 md:py-24 relative opacity-0">
+                <!-- Collapsed Input Section (smaller version of the hero input) -->
+                <div id="collapsed-input-section" class="mb-8 p-4 bg-light-gray-200 rounded-lg shadow-md">
+                    <button id="toggle-collapsed-input"
+                        class="w-full flex justify-between items-center text-dark-gray font-semibold py-2">
+                        <span>URL และตัวเลือก</span>
+                        <svg class="w-5 h-5 transform transition-transform duration-300 rotate-180"
+                            id="collapsed-input-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+                    <div id="collapsed-input-content" class="mt-4 space-y-4 hidden">
+                        <div class="relative">
+                            <input type="text" id="youtube-url-collapsed"
+                                class="w-full p-3 pr-10 rounded-lg border-2 border-dark-gray focus:border-accent focus:ring-accent focus:outline-none transition-all duration-300"
+                                placeholder="URL YouTube">
+                            <button id="generate-button-collapsed"
+                                class="absolute right-2 top-1/2 -translate-y-1/2 bg-accent text-dark-gray font-bold py-1 px-3 rounded-lg text-sm hover:bg-dark-gray hover:text-accent transition-colors">
+                                สร้างใหม่
+                            </button>
+                        </div>
+                        <!-- Additional details and language selection can be added here if needed, similar to the hero section -->
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+
+                    <!-- คอลัมน์ซ้าย: Video Player -->
+                    <div class="lg:col-span-2">
+                        <div
+                            class="w-full aspect-video rounded-xl shadow-2xl overflow-hidden border-4 border-dark-gray">
+                            <iframe id="youtube-video-player" class="w-full h-full" src="about:blank"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+
+                    <!-- คอลัมน์ขวา: Control Section & Timestamp Display/Edit -->
+                    <div class="lg:col-span-1 flex flex-col">
+                        <!-- Control Section -->
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex space-x-2">
+                                <button id="display-mode-btn"
+                                    class="btn-primary py-2 px-4 rounded-lg text-sm">แสดงผล</button>
+                                <button id="edit-mode-btn"
+                                    class="btn-secondary py-2 px-4 rounded-lg text-sm">แก้ไข</button>
+                            </div>
+                            <button id="copy-timestamp-btn"
+                                class="bg-muted-blue text-light-gray py-2 px-4 rounded-lg text-sm hover:bg-dark-gray transition-colors">
+                                คัดลอก
+                            </button>
+                        </div>
+
+                        <!-- Timestamp Display/Edit Section -->
+                        <div id="timestamp-section"
+                            class="flex-grow bg-dark-gray bg-opacity-10 p-4 rounded-xl overflow-y-auto text-dark-gray">
+                            <!-- Mock Timestamp Content -->
+                            <div id="timestamp-display-content">
+                                <p><span class="timestamp-link text-accent cursor-pointer hover:underline"
+                                        data-time="0">00:00</span> - บทนำ</p>
+                                <p><span class="timestamp-link text-accent cursor-pointer hover:underline"
+                                        data-time="60">01:00</span> - คุณสมบัติหลัก</p>
+                                <p><span class="timestamp-link text-accent cursor-pointer hover:underline"
+                                        data-time="120">02:00</span> - การใช้งาน</p>
+                                <p><span class="timestamp-link text-accent cursor-pointer hover:underline"
+                                        data-time="180">03:00</span> - สรุป</p>
+                            </div>
+                            <textarea id="timestamp-edit-content"
+                                class="hidden w-full h-full p-2 rounded-lg border-2 border-dark-gray focus:border-accent focus:ring-accent focus:outline-none"
+                                rows="10"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ===== ส่วนที่ 3: Features Section (Removed, as per Youtamp requirements) ===== -->
+        <!-- ===== ส่วนที่ 4: Footer ===== -->
+        <footer class="bg-dark-gray text-light-gray py-16">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-lg font-semibold mb-2">Youtamp</p>
+                <p class="opacity-70">
+                    &copy; <span id="current-year"></span> สงวนลิขสิทธิ์
+                </p>
+            </div>
+        </footer>
+
+    </div>
+
+    <script src="/static/app.js"></script>
+
 </body>
+
 </html>
