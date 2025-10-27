@@ -1,9 +1,13 @@
 {
+  "name": "youtamp",
+  "main": "static/app.js",
   "scripts": {
-    "buildcss": "npx tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+    "dev.build:css": "npx @tailwindcss/cli -i ./static/css/input.css -o ./static/dist/output.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./static/css/input.css -o ./static/dist/output.css --minify"
   },
-  "devDependencies": {
-    "@tailwindcss/cli": "^4.1.14",
-    "tailwindcss": "^4.1.14"
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.16",
+    "daisyui": "^5.3.8",
+    "tailwindcss": "^4.1.16"
   }
 }
