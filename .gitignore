@@ -201,3 +201,5 @@ node_modules/
 # output
 artifacts/
 output/
+
+.vscode/
