@@ -1,0 +1,319 @@
+@import "tailwindcss";
+
+@plugin "daisyui" {
+    themes: youtamp-light --default, youtamp-dark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+    name: "youtamp-light";
+    color-scheme: light;
+
+    --color-base-100: oklch(90% 0.01 240);
+    /* #D3D0CB */
+    --color-base-200: oklch(95% 0.01 240);
+    /* A lighter shade for elevation */
+    --color-base-300: oklch(85% 0.01 240);
+    /* A darker shade for elevation */
+    --color-base-content: oklch(15% 0.01 240);
+    /* #1E2019 */
+
+    --color-primary: #e2c044;
+    /* #e2c044 */
+    --color-primary-content: oklch(100% 0 0);
+    /* White */
+
+    --color-secondary: oklch(45% 0.05 200);
+    /* #587B7F */
+    --color-secondary-content: oklch(100% 0 0);
+    /* White */
+
+    --color-accent: oklch(70% 0.15 80);
+    /* #E2C044 */
+    --color-accent-content: oklch(100% 0 0);
+    /* White */
+
+    --color-neutral: oklch(25% 0.01 240);
+    /* #393E41 */
+    --color-neutral-content: oklch(100% 0 0);
+    /* White */
+
+    --color-info: oklch(70% 0.2 220);
+    --color-info-content: oklch(98% 0.01 220);
+
+    --color-success: oklch(65% 0.25 140);
+    --color-success-content: oklch(98% 0.01 140);
+
+    --color-warning: oklch(80% 0.25 80);
+    --color-warning-content: oklch(20% 0.05 80);
+
+    --color-error: oklch(65% 0.3 30);
+    --color-error-content: oklch(98% 0.01 30);
+
+    --radius-selector: 1rem;
+    --radius-field: 0.5rem;
+    --radius-box: 1rem;
+
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+    name: "youtamp-dark";
+    color-scheme: dark;
+
+    --color-base-100: oklch(15% 0.01 240);
+    /* #1E2019 */
+    --color-base-200: oklch(25% 0.01 240);
+    /* #393E41 */
+    --color-base-300: oklch(35% 0.01 240);
+    /* Slightly lighter dark */
+    --color-base-content: oklch(90% 0.01 240);
+    /* #D3D0CB */
+
+    --color-primary: #e2c044;
+    /* #E2C044 */
+    --color-primary-content: oklch(100% 0 0);
+    /* White */
+
+    --color-secondary: oklch(45% 0.05 200);
+    /* #587B7F */
+    --color-secondary-content: oklch(100% 0 0);
+    /* White */
+
+    --color-accent: oklch(70% 0.15 80);
+    /* #E2C044 */
+    --color-accent-content: oklch(100% 0 0);
+    /* White */
+
+    --color-neutral: oklch(90% 0.01 240);
+    /* #D3D0CB */
+    --color-neutral-content: oklch(15% 0.01 240);
+    /* Black */
+
+    --color-info: oklch(70% 0.2 220);
+    --color-info-content: oklch(98% 0.01 220);
+
+    --color-success: oklch(65% 0.25 140);
+    --color-success-content: oklch(98% 0.01 140);
+
+    --color-warning: oklch(80% 0.25 80);
+    --color-warning-content: oklch(20% 0.05 80);
+
+    --color-error: oklch(65% 0.3 30);
+    --color-error-content: oklch(98% 0.01 30);
+
+    --radius-selector: 1rem;
+    --radius-field: 0.5rem;
+    --radius-box: 1rem;
+
+    --size-selector: 0.25rem;
+    --size-field: 0.25rem;
+
+    --border: 1px;
+    --depth: 1;
+    --noise: 0;
+}
+
+@theme {
+    --font-sans: 'Noto Sans Thai Looped', sans-serif;
+}
+
+@keyframes fade-in-bounceup {
+    0% {
+        opacity: 0;
+        transform: translate3d(0%, 100%, 0);
+    }
+
+    33% {
+        opacity: 0.5;
+        transform: translate3d(0%, 0%, 0);
+    }
+
+    66% {
+        opacity: 0.7;
+        transform: translate3d(0%, 20%, 0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@utility animate-fade-in-bounceup {
+    animation: fade-in-bounceup 1s ease-in-out forwards;
+}
+
+@keyframes fade-out-down {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+    }
+}
+
+@utility animate-fade-out-down {
+    animation: fade-out-down 1s ease-in-out forwards;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+@utility animate-shake {
+    animation: shake 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+
+body {
+    font-family: var(--font-sans);
+}
+
+/* Animated Blob CSS */
+.animated-blob-primary {
+    position: absolute;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: blob-morph 20s ease-in-out infinite alternate,
+        blob-move 30s ease-in-out infinite alternate;
+    /* blob-color-primary 30s ease-in-out infinite alternate; */
+    background-color: var(--color-primary);
+    z-index: -1;
+    opacity: 0.6;
+    transform: translate(-50%, -50%);
+}
+
+.animated-blob-secondary {
+    position: absolute;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    animation: blob-morph 20s ease-in-out infinite alternate,
+        blob-move 30s ease-in-out infinite alternate;
+    /* blob-color-secondary 30s ease-in-out infinite alternate; */
+    background-color: var(--color-secondary);
+    z-index: -1;
+    opacity: 0.6;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes blob-morph {
+
+    0%,
+    100% {
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    }
+
+    33% {
+        border-radius: 70% 30% 30% 70% / 70% 70% 30% 30%;
+    }
+
+    66% {
+        border-radius: 30% 70% 70% 30% / 70% 30% 70% 30%;
+    }
+}
+
+@keyframes blob-move {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%);
+    }
+
+    25% {
+        transform: translate(-60%, -40%);
+    }
+
+    50% {
+        transform: translate(-40%, -60%);
+    }
+
+    75% {
+        transform: translate(-70%, -30%);
+    }
+}
+
+@keyframes blob-color-primary {
+
+    0%,
+    100% {
+        background: var(--color-primary);
+    }
+
+    33% {
+        background: #f3f1e4;
+    }
+
+    66% {
+        background: #e1a012
+    }
+}
+
+@keyframes blob-color-secondary {
+
+    0%,
+    100% {
+        background: var(--color-secondary);
+    }
+
+    33% {
+        background: #323c3b;
+    }
+
+    66% {
+        background: #f3f1e4
+    }
+}
+
+@keyframes heroImageFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+#hero-image-container {
+    animation: heroImageFloat 5s ease-in-out infinite alternate;
+}
+
+/* App View and Transitions */
+#app-view-section {
+    transition: opacity 0.7s ease-in-out;
+}
+
+#hero-section {
+    transition: all 0.5s ease-in-out;
+}
+
+header {
+    transition: transform 0.3s ease-in-out;
+}
