@@ -8,6 +8,13 @@
 
 <h3>A simple web application for YouTube timestamp creation.</h3>
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg?style=for-the-badge&logo=python)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.12+-000.svg?style=for-the-badge&logo=flask&logoColor=fff)](https://flask.palletsprojects.com/)
+[![DaisyUI](https://img.shields.io/badge/DaisyUI-5.3+-purple.svg?style=for-the-badge&logo=daisyui)](https://daisyui.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.1+-blue.svg?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
+[![uv](https://img.shields.io/badge/uv-1.0+-purple.svg?style=for-the-badge&logo=uv)](https://docs.astral.sh/uv/)
+
 </div>
 
 ## Development
@@ -18,6 +25,10 @@ Follow these steps to set up and run the project in your local development envir
 
 *   [Python](https://www.python.org/downloads/) (version 3.12 or higher recommended)
 *   [uv](https://docs.astral.sh/uv/getting-started/installation/#standalone-installer) (a fast Python package installer and resolver)
+
+In case you want to edit frontend (JavaScript/CSS/HTML), install the following additionally:
+*   [Node.js](https://nodejs.org/en/download/) (version 16 or higher recommended)
+*   [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (comes with Node.js)
 
 ### Installation
 **Clone the repository:**
@@ -30,9 +41,24 @@ cd youtamp
 ### Running the Development Server
 1.  **Start the Flask development server:**
     ```bash
-    uv run --env-file .env app.py
+    uv run --env-file .env app.py --file index.html
     ```
-2. **Open the browser:** http://127.0.0.1:5000/ 
+    >[!IMPORTANT] Make sure you have "GEMINI_API_KEY" set in your `.env` file or your environment variables
+2. **Open the browser:** http://127.0.0.1:5000/
+3. **In case you want to edit CSS files, run**
+    ```bash
+    npm run dev.build:css
+    ``` 
+    > [!NOTE] it will run continuously while you edit CSS files
+
+### How to edit frontend files (JavaScript/CSS/HTML)
+Frontend base on [DaisyUI](https://daisyui.com/) and [TailwindCSS](https://tailwindcss.com/) framework.
+1.  **Edit files in the `static/` directory**
+    -  **JavaScript files:** `static/app.js`
+    -  **CSS files:** `static/css/input.css`
+    - if you want to add new files, just create them in the `static/` folder
+2.  **Edit `template/index.html`** for HTML structure.
+3.  **Refresh your browser** to see changes.
 
 ### Linting & Formatting
 
