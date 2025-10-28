@@ -8,7 +8,8 @@
   "dependencies": {
     "@tailwindcss/cli": "^4.1.16",
     "daisyui": "^5.3.8",
-    "tailwindcss": "^4.1.16"
+    "tailwindcss": "^4.1.16",
+    "tailwindcss-animated": "^2.0.0"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.401",

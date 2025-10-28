@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin "@iconify/tailwind4";
+@import "tailwindcss-animated";
 
 @plugin "daisyui" {
     themes: pastel --default, forest --prefersdark;
