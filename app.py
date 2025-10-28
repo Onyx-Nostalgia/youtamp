@@ -1,3 +1,4 @@
+import argparse
 from collections.abc import Iterable
 
 from flask import Flask, render_template, request
@@ -7,7 +8,6 @@ from utils import file_io
 
 app = Flask(__name__)
 
-
 def format_timestamps(timestamps: Iterable[str]) -> str:
     return "\n".join(timestamps)
 
@@ -15,7 +15,7 @@ def format_timestamps(timestamps: Iterable[str]) -> str:
 @app.route("/", methods=["GET", "POST"])
 def index() -> str | tuple[str, int]:
     if request.method == "GET":
-        return render_template("index.html")
+        return render_template(app.config['HTML_FILE'])
 
     if request.method == "POST":
         error = ""
@@ -51,6 +51,10 @@ def index() -> str | tuple[str, int]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Run the Flask app with a specified HTML template.")
+    parser.add_argument("--file", type=str, default="index.html", help="The HTML file to render (e.g., 'index.html').")
+    args = parser.parse_args()
+    app.config['HTML_FILE'] = args.file
     app.run(debug=True)
 
 
