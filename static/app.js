@@ -72,6 +72,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Refactored handleUrlChange to accept an inputSection element
+    const handleUrlChangeForSection = async (currentInputSection) => {
+        const youtubeUrlInput = currentInputSection.querySelector('[data-youtube-url-input]');
+        const urlInput = currentInputSection.querySelector('.url-input');
+        const previewCard = currentInputSection.querySelector('.preview-card');
+        const videoThumbnail = previewCard ? previewCard.querySelector('[data-video-thumbnail]') : null;
+        const videoTitle = previewCard ? previewCard.querySelector('[data-video-title]') : null;
+        const videoAuthor = previewCard ? previewCard.querySelector('[data-video-author]') : null;
+
+        const url = youtubeUrlInput.value.trim();
+        if (validateUrl(url)) {
+            const videoId = getVideoIdFromUrl(url);
+
+            if (videoId && videoId.length === 11 && previewCard) {
+                const details = await fetchVideoDetails(videoId);
+                if (!details) {
+                    toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
+                    toggleClassPair(urlInput, 'input-primary', 'input-error', false);
+                    urlInput.classList.toggle('animate-shake', true);
+                    return;
+                }
+                if (videoThumbnail) { videoThumbnail.src = details.thumbnail };
+                if (videoTitle) {
+                    videoTitle.textContent = details.title
+                    videoTitle.setAttribute('data-tip', details.title);
+                };
+                if (videoAuthor) videoAuthor.textContent = details.author;
+                toggleClassPair(urlInput, 'input-primary', 'input-error', true);
+                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', true);
+                urlInput.classList.toggle('animate-shake', false);
+
+            } else if (previewCard) {
+                toggleClassPair(urlInput, 'input-primary', 'input-error', false);
+                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
+                urlInput.classList.toggle('animate-shake', true);
+            }
+        } else {
+            if (previewCard) {
+                toggleClassPair(urlInput, 'input-primary', 'input-error', false);
+                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
+                urlInput.classList.toggle('animate-shake', true);
+            }
+        }
+    };
+
+
     // Handle URL input and preview card for all input sections
     document.querySelectorAll('[input-section]').forEach(inputSection => {
         const youtubeUrlInput = inputSection.querySelector('[data-youtube-url-input]');
@@ -82,50 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const videoThumbnail = previewCard ? previewCard.querySelector('[data-video-thumbnail]') : null;
         const videoTitle = previewCard ? previewCard.querySelector('[data-video-title]') : null;
         const videoAuthor = previewCard ? previewCard.querySelector('[data-video-author]') : null;
+        const additionalDetailsTextarea = inputSection.querySelector('[data-additional-details]');
+        const languageSelect = inputSection.querySelector('[data-language-select]');
+
 
         if (youtubeUrlInput) {
-            const handleUrlChange = async () => {
-                const url = youtubeUrlInput.value.trim();
-                if (validateUrl(url)) {
-
-                    const videoId = getVideoIdFromUrl(url);
-
-                    // Only proceed if videoId is valid and has a reasonable length
-                    if (videoId && videoId.length === 11 && previewCard) { // YouTube video IDs are typically 11 characters long
-                        const details = await fetchVideoDetails(videoId);
-                        if (!details) {
-                            toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-                            toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                            urlInput.classList.toggle('animate-shake', true);
-                            return;
-                        }
-                        if (videoThumbnail) { videoThumbnail.src = details.thumbnail };
-                        if (videoTitle) { 
-                            videoTitle.textContent = details.title 
-                            videoTitle.setAttribute('data-tip', details.title);
-                        };
-                        if (videoAuthor) videoAuthor.textContent = details.author;
-                        toggleClassPair(urlInput, 'input-primary', 'input-error', true);
-                        toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', true);
-                        urlInput.classList.toggle('animate-shake', false);
-
-                    } else if (previewCard) {
-                        // If videoId is invalid or not 11 characters, hide the preview card
-                        toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                        toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-                        urlInput.classList.toggle('animate-shake', true);
-
-                    }
-                } else {
-                    if (previewCard) {
-                        toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                        toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-                        urlInput.classList.toggle('animate-shake', true);
-                    }
-                }
-            };
-
-            youtubeUrlInput.addEventListener('input', debounce(handleUrlChange, 500)); // Debounce with 500ms delay
+            youtubeUrlInput.addEventListener('input', debounce(() => handleUrlChangeForSection(inputSection), 500)); // Debounce with 500ms delay
             youtubeUrlInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault(); // Prevent form submission
@@ -135,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             // Initial check in case there's a pre-filled URL
-            handleUrlChange();
+            handleUrlChangeForSection(inputSection);
         }
 
         if (closePreviewBtn) {
@@ -159,6 +167,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     youtubeVideoPlayer.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
                 }
 
+                // --- Synchronization Logic --- 
+                // Get references to the specific input sections
+                const heroInputSection = heroSection.querySelector('[input-section]');
+                const appViewInputSection = appViewSection.querySelector('[input-section]');
+
+                // Check if this is the hero section's generate button
+                if (inputSection === heroInputSection) {
+                    const heroUrlValue = youtubeUrlInput.value;
+                    const heroAdditionalDetailsValue = additionalDetailsTextarea ? additionalDetailsTextarea.value : '';
+                    const heroLanguageSelectValue = languageSelect ? languageSelect.value : 'auto';
+
+                    const appViewUrlInput = appViewInputSection.querySelector('[data-youtube-url-input]');
+                    const appViewAdditionalDetailsTextarea = appViewInputSection.querySelector('[data-additional-details]');
+                    const appViewLanguageSelect = appViewInputSection.querySelector('[data-language-select]');
+
+                    if (appViewUrlInput) appViewUrlInput.value = heroUrlValue;
+                    if (appViewAdditionalDetailsTextarea) appViewAdditionalDetailsTextarea.value = heroAdditionalDetailsValue;
+                    if (appViewLanguageSelect) appViewLanguageSelect.value = heroLanguageSelectValue;
+
+                    // Trigger URL change handler for the app view section to update its preview card
+                    if (appViewUrlInput) {
+                        handleUrlChangeForSection(appViewInputSection);
+                    }
+                }
+                // --- End Synchronization Logic ---
+
                 // Transition to App View
                 heroSection.classList.add('opacity-0');
                 heroSection.classList.add('hidden');
@@ -169,8 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
-
-    const additionalDetailsTextarea = document.querySelector('[data-additional-details]');
 
     // Timestamp Display/Edit Mode
     let isEditMode = false;
