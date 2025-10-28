@@ -9,5 +9,9 @@
     "@tailwindcss/cli": "^4.1.16",
     "daisyui": "^5.3.8",
     "tailwindcss": "^4.1.16"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.401",
+    "@iconify/tailwind4": "^1.0.6"
   }
 }

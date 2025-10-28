@@ -1,7 +1,8 @@
 @import "tailwindcss";
+@plugin "@iconify/tailwind4";
 
 @plugin "daisyui" {
-    themes: youtamp-light --default, youtamp-dark --prefersdark;
+    themes: pastel --default, forest --prefersdark;
 }
 
 @plugin "daisyui/theme" {

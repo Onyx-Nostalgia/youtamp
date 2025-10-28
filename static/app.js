@@ -28,16 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 
-    // Theme Toggle
-    if (themeToggle) {
-        themeToggle.addEventListener('change', (e) => {
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'youtamp-dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'youtamp-light');
-            }
-        });
-    }
 
     // URL Validation
     const validateUrl = (url) => {
@@ -48,13 +38,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Debounce utility function
     const debounce = (func, delay) => {
         let timeout;
-        return function(...args) {
+        return function (...args) {
             const context = this;
             clearTimeout(timeout);
             timeout = setTimeout(() => func.apply(context, args), delay);
         };
     };
 
+    const getVideoIdFromUrl = (url) => {
+        const videoIdMatch = url.match(/(?:v=|embed\/|youtu\.be\/)([^&?]+)/);
+        return videoIdMatch ? videoIdMatch[1] : null;
+    }
 
 
     // Function to fetch video details using YouTube oEmbed API
@@ -74,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 author: data.author_name
             };
         } catch (error) {
-            return 
+            return
         }
     };
 
@@ -84,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlInput = inputSection.querySelector('.url-input');
         const generateButton = inputSection.querySelector('[data-generate-button]');
         const previewCard = inputSection.querySelector('.preview-card');
-        const closePreviewBtn = previewCard ? previewCard.querySelector('.btn-close'): null;
+        const closePreviewBtn = previewCard ? previewCard.querySelector('.btn-close') : null;
         const videoThumbnail = previewCard ? previewCard.querySelector('[data-video-thumbnail]') : null;
         const videoTitle = previewCard ? previewCard.querySelector('[data-video-title]') : null;
         const videoAuthor = previewCard ? previewCard.querySelector('[data-video-author]') : null;
@@ -93,9 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const handleUrlChange = async () => {
                 const url = youtubeUrlInput.value.trim();
                 if (validateUrl(url)) {
-  
-                    const videoIdMatch = url.match(/(?:v=|embed\/|youtu\.be\/)([^&?]+)/);
-                    const videoId = videoIdMatch ? videoIdMatch[1] : null;
+
+                    const videoId = getVideoIdFromUrl(url);
 
                     // Only proceed if videoId is valid and has a reasonable length
                     if (videoId && videoId.length === 11 && previewCard) { // YouTube video IDs are typically 11 characters long
@@ -106,19 +99,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             urlInput.classList.toggle('animate-shake', true);
                             return;
                         }
-                        if (videoThumbnail) videoThumbnail.src = details.thumbnail;
-                        if (videoTitle) videoTitle.textContent = details.title;
+                        if (videoThumbnail) { videoThumbnail.src = details.thumbnail };
+                        if (videoTitle) { 
+                            videoTitle.textContent = details.title 
+                            videoTitle.setAttribute('data-tip', details.title);
+                        };
                         if (videoAuthor) videoAuthor.textContent = details.author;
                         toggleClassPair(urlInput, 'input-primary', 'input-error', true);
                         toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', true);
                         urlInput.classList.toggle('animate-shake', false);
-  
+
                     } else if (previewCard) {
                         // If videoId is invalid or not 11 characters, hide the preview card
                         toggleClassPair(urlInput, 'input-primary', 'input-error', false);
                         toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
                         urlInput.classList.toggle('animate-shake', true);
-                        
+
                     }
                 } else {
                     if (previewCard) {
@@ -142,11 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
             handleUrlChange();
         }
 
-        if(closePreviewBtn) {
+        if (closePreviewBtn) {
             closePreviewBtn.addEventListener('click', () => {
                 if (previewCard) {
                     toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-                    
+
                 }
             });
         }
@@ -158,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const videoId = url.split('v=')[1] || url.split('youtu.be/')[1];
+                const videoId = getVideoIdFromUrl(url);
                 if (videoId) {
                     youtubeVideoPlayer.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
                 }

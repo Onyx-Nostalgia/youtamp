@@ -1,81 +1,89 @@
 <!-- Input Section -->
-<div class="relative" input-section>
-    <!-- Preview Card -->
-    <div
-        class="card card-xs card-side preview-card absolute bg-base-200 h-25 w-full md:h-25 shadow-sm bottom-full -translate-y-2">
-        <figure class="p-0 md:p-2">
-            <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Thumbnail"
-                class="md:rounded-xl"    
-            data-video-thumbnail />
-        </figure>
-        <div class="card-body relative">
-            <h2 class="card-title" data-video-title>
-                Title
-            </h2>
-            <p data-video-author class="m-0">@author</p>
-            <div class="card-actions absolute bottom-1 right-2">
-                <button class="btn btn-circle btn-xs btn-ghost btn-neutral btn-close">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+<div input-section>
+    <div class="relative w-full z-10">
+        <!-- URL Input -->
+        <label class="input url-input input-primary input-lg w-full rounded-full pr-17 validator mb-4">
+            <svg class="h-[2em] opacity-50 text-primary-content" xmlns="http://www.w3.org/2000/svg" width="24"
+                height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" fill-opacity="0" d="M12 11L12 12L12 13z">
+                    <animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s"
+                        values="M12 11L12 12L12 13z;M10 8.5L16 12L10 15.5z" />
+                    <set fill="freeze" attributeName="fill-opacity" begin="0.6s" to="1" />
+                </path>
+                <path fill="none" stroke="currentColor" stroke-dasharray="64" stroke-dashoffset="64"
+                    stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 5c9 0 9 0 9 7c0 7 0 7 -9 7c-9 0 -9 0 -9 -7c0 -7 0 -7 9 -7Z">
+                    <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0" />
+                </path>
+            </svg>
+            <input type="url" data-youtube-url-input
+                pattern="^(https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([^\s&]+))$"
+                value="https://www.youtube.com/watch?v=-5R-aLmZ9Ps"
+                placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
+            <button
+                class="btn btn-primary btn-circle btn-xl hover:bg-primary-content hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out"
+                data-generate-button>
+                ✒️
+            </button>
+
+        </label>
+
+        <!-- Preview Card -->
+        <div class="flex absolute card card-xs card-side preview-card bg-secondary/90 hover:bg-secondary text-secondary-content shadow-sm
+    {% if section == 'appview' %} 
+         top-full sm:right-0 md:left-1/2 md:transform md:-translate-x-1/2
+    {% else %}
+        md:left-1/2 w-full md:-translate-x-1/2
+        bottom-full transform -translate-y-2 max-h-20 sm:max-h-32
+    {% endif %}
+        overflow-hidden" >
+            <figure class="p-0 md:p-2 hidden sm:flex sm:max-w-32 md:max-w-40">
+                <img src="" alt="Thumbnail" data-video-thumbnail class="skeleton rounded-2xl" />
+            </figure>
+            <div class="card-body relative ml-0">
+                <div class="card-title" data-video-title>
+                    <div class="skeleton h-4 w-80"></div>
+                </div>
+                <div data-video-author class="m-0">
+                    <div class="skeleton h-4 w-80"></div>
+                </div>
+                <div class="card-actions absolute bottom-1 right-2">
+                    <button class="btn btn-circle btn-xs btn-ghost btn-secondary btn-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-    <!-- URL Input -->
-    <label class="input url-input input-primary input-lg w-full rounded-full pr-16 validator mb-4">
-
-        <svg class="h-[2em] opacity-50 text-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24">
-            <path fill="currentColor" fill-opacity="0" d="M12 11L12 12L12 13z">
-                <animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s"
-                    values="M12 11L12 12L12 13z;M10 8.5L16 12L10 15.5z" />
-                <set fill="freeze" attributeName="fill-opacity" begin="0.6s" to="1" />
-            </path>
-            <path fill="none" stroke="currentColor" stroke-dasharray="64" stroke-dashoffset="64" stroke-linecap="round"
-                stroke-linejoin="round" stroke-width="2"
-                d="M12 5c9 0 9 0 9 7c0 7 0 7 -9 7c-9 0 -9 0 -9 -7c0 -7 0 -7 9 -7Z">
-                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="64;0" />
-            </path>
-        </svg>
-        <input type="url" data-youtube-url-input
-            pattern="^(https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([^\s&]+))$"
-            value="https://www.youtube.com/watch?v=bFl_cYUhqw0&list=PLizarF86bU_rlJsPzhbUo7fVRC_unG2aZ&index=4&t=123s"
-            placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
-        <button
-            class="btn btn-primary btn-circle btn-xl hover:bg-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out"
-            data-generate-button>
-            ✒️
-        </button>
-    </label>
-
     <!-- Optional Input Section (Collapsible) -->
     <div class="collapse collapse-arrow">
-        <input type="checkbox" />
-        <div class="collapse-title text-base font-medium after:start-5 after:end-auto pe-4 ps-12">
+        <input type="checkbox" class="peer" />
+        <div
+            class="collapse-title peer-checked:bg-primary peer-checked:text-primary-content after:start-5 after:end-auto pe-4 ps-12">
             ตัวเลือกเพิ่มเติม
         </div>
-        <div class="collapse-content mt-4 space-y-4 text-sm">
+        <div class="collapse-content space-y-4 peer-checked:bg-primary">
             <!-- Additional Details -->
-            <div data-optional-input-content>
-                <label for="additional-details" class="block text-base-content text-sm font-bold mb-2">
-                    รายละเอียดเพิ่มเติม (Optional):
-                </label>
-                <textarea data-additional-details class="textarea textarea-bordered textarea-primary w-full" rows="4"
-                    placeholder="เช่น 'อยากได้ timestamp สัก 10 รายการ', 'เจาะจงเฉพาะส่วนที่เป็นสาระหลัก'"></textarea>
-            </div>
+            <fieldset class="fieldset" data-optional-input-content>
+                <legend class="fieldset-legend">รายละเอียดเพิ่มเติม</legend>
+                <textarea data-additional-details class="textarea textarea-primary w-full" rows="4"
+                    placeholder="เช่น อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก"></textarea>
+            </fieldset>
             <!-- Language Selection -->
-            <div>
-                <label for="language-select" class="block text-base-content text-sm font-bold mb-2">
-                    ภาษาผลลัพธ์ (Optional):
-                </label>
-                <select data-language-select class="select select-bordered select-primary w-full">
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">
+                    ภาษาผลลัพธ์
+                </legend>
+                <select data-language-select class="select select-primary">
                     <option value="auto">ตามภาษาของวิดีโอ (Default)</option>
                     <option value="th">ไทย (TH)</option>
                     <option value="en">อังกฤษ (EN)</option>
                 </select>
-            </div>
+            </fieldset>
         </div>
     </div>
 </div>

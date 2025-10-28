@@ -18,5 +18,5 @@ SAVE_PROMPT: bool = get_bool_env("SAVE_PROMPT")
 SAVE_RESPONSE: bool = get_bool_env("SAVE_RESPONSE")
 
 # --- File System ---
-PROJECT_ROOT: Path = Path(__file__).resolve()
+PROJECT_ROOT: Path = Path(__file__).resolve().parent
 ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
