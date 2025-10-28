@@ -1,7 +1,6 @@
 // static/app.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.querySelector('.theme-controller');
     const heroSection = document.getElementById('hero-section');
     const appViewSection = document.getElementById('app-view-section');
     const youtubeVideoPlayer = document.getElementById('youtube-video-player');
@@ -200,9 +199,206 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     appViewSection.classList.remove('opacity-0');
                 }, 50);
+
+                if (timestampDisplayContent) {
+                    sendData('mock');
+                }
             });
         }
     });
+
+
+    /**
+ * ฟังก์ชันย่อย: แปลง Timestamp (MM:SS หรือ HH:MM:SS) ให้เป็นจำนวนวินาทีทั้งหมด
+ * @param {string} customTimeString - เช่น '00:01:30'
+ * @returns {number | null} - จำนวนวินาทีทั้งหมด เช่น 90 หรือ null ถ้าผิดพลาด
+ */
+    function convertToSeconds(customTimeString) {
+        const parts = customTimeString.split(':').map(p => parseInt(p.trim(), 10));
+
+        let totalSeconds = 0;
+
+        if (parts.length === 3) {
+            // รูปแบบ HH:MM:SS
+            const hours = parts[0];
+            const minutes = parts[1];
+            const seconds = parts[2];
+            totalSeconds = (hours * 3600) + (minutes * 60) + seconds;
+
+        } else if (parts.length === 2) {
+            // รูปแบบ MM:SS
+            const minutes = parts[0];
+            const seconds = parts[1];
+            totalSeconds = (minutes * 60) + seconds;
+
+        } else {
+            // รูปแบบไม่ถูกต้อง
+            console.error('Invalid time format:', customTimeString);
+            return null;
+        }
+
+        return totalSeconds;
+    }
+
+    /**
+     * ฟังก์ชันอ่านข้อมูลจากไฟล์ .txt ที่มี Timestamp พร้อมการสร้าง LI ที่มีเงื่อนไข
+     * @returns {Promise<{status: string, html_list: string}>} Object ที่มี HTML String สำหรับแสดงผล
+     */
+    async function readMockData() {
+        // ... ส่วน fetch และการแยก lines ...
+        const url = '/static/timestamps.txt';
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) { throw new Error(`ไม่พบไฟล์ Mock Data!`); }
+            const rawText = await response.text();
+            const lines = rawText.split('\n').filter(line => line.trim() !== '');
+
+            let htmlContent = '';
+            const totalItems = lines.length; // จำนวนรายการทั้งหมด
+
+            // 2. วนลูปเพื่อสร้าง HTML <li> ที่มีเงื่อนไข
+            lines.forEach((line, index) => {
+
+                // 2.1. แยก Timestamp และ Text Content (โค้ดเดิม)
+                const firstSpaceIndex = line.indexOf(' ');
+                if (firstSpaceIndex <= 0) return; // ข้ามบรรทัดที่ไม่ถูกต้อง
+
+                const timestamp = line.substring(0, firstSpaceIndex).trim();
+                const text_content = line.substring(firstSpaceIndex + 1).trim();
+                const secondsValue = convertToSeconds(timestamp);
+
+                // ตรวจสอบความถูกต้อง
+                if (secondsValue === null) return;
+
+                const isFirst = (index === 0);
+                const isLast = (index === totalItems - 1);
+
+                // HR Tailwind Styles (เปลี่ยนสีตามคู่/คี่)
+                const previousColor = index % 2 === 0
+                    ? 'primary'
+                    : 'secondary';
+                const mainColor = index % 2 === 0
+                    ? 'secondary'
+                    : 'primary';
+
+                const delay = 50 + (index * 50);
+
+                // HR ด้านบน: จะแสดงถ้าไม่ใช่รายการแรก
+                const topHr = isFirst ? '' : `<hr class="bg-${previousColor}" />`;
+
+                // HR ด้านล่าง: จะแสดงถ้าไม่ใช่รายการสุดท้าย
+                const bottomHr = isLast ? '' : `<hr class="bg-${mainColor}" />`;
+
+                const divContent = index % 2 === 0
+                    ? `
+<div class="timeline-middle">
+    <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
+</div>
+<div class="timeline-end timeline-box p-0">
+                <input type="text" placeholder="${text_content}" value="${text_content}"
+                class="input input-ghost" style="field-sizing: content;" /></div>
+                    `
+                    : `
+<div class="timeline-start timeline-box md:text-end p-0">
+                <input type="text" placeholder="${text_content}" value="${text_content}"
+                class="input input-ghost" style="field-sizing: content;" /></div>
+        <div class="timeline-middle">
+            <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
+        </div>`;
+
+                htmlContent += `
+       <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-${delay} motion-reduce:animate-none">
+        ${topHr}
+        ${divContent}
+        ${bottomHr}
+    </li>
+    `;
+            });
+
+            // คืนค่า
+            return {
+                status: "success",
+                message: "แสดงผลข้อมูล Timestamp จาก TXT สำเร็จ!",
+                html_list: htmlContent
+            };
+
+        } catch (error) {
+            console.error('Error reading mock data:', error);
+            return {
+                status: "error",
+                message: `Mock Data Load Failed: ${error.message}`
+            };
+        }
+    }
+
+    /**
+ * ฟังก์ชันหลักสำหรับส่งข้อมูล (รองรับ Live และ Mock)
+ * มินเนี่ยนปรับให้ใช้ผลลัพธ์ที่มาจากการอ่านไฟล์ TXT
+ * @param {'live' | 'mock'} mode กำหนดว่าจะส่งไป Flask จริง หรือใช้ Mock Data
+ */
+    async function sendData(mode) {
+        if (!timestampDisplayContent) return; // ป้องกันการทำงานก่อน DOM โหลด
+
+        try {
+            let result;
+
+            if (mode === 'mock') {
+                // ใช้ข้อมูลจำลองจากไฟล์ .txt
+                timestampDisplayContent.innerHTML = '<p>กำลังโหลด Mock Data...</p>';
+                result = await readMockData();
+            } else {
+                // ส่งข้อมูลจริงไปยัง Flask
+                timestampDisplayContent.innerHTML = '<p>กำลังส่งข้อมูลจริงไปยัง Flask...</p>';
+
+                const dataToSend = {
+                    // input_username: usernameInput.value.trim(),
+                    // select_option: selectElement.value,
+                    // text_area_notes: notesElement.value.trim()
+                };
+
+                const response = await fetch('/api/process_data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSend)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP Error! Status: ${response.status}`);
+                }
+                result = await response.json();
+            }
+
+            // 5. แสดงผลลัพธ์ (ไม่ว่าจะมาจาก Live หรือ Mock)
+            if (result.status === 'success') {
+                timestampDisplayContent.innerHTML = result.html_list;
+                    // Initial attachment of handlers
+    attachTimestampClickHandlers();
+            } else {
+                timestampDisplayContent.innerHTML = `<p style="color: red;">❌ Error: ${result.message}</p>`;
+            }
+
+        } catch (error) {
+            console.error('Operation Error:', error);
+            timestampDisplayContent.innerHTML = `<p style="color: red;">เกิดข้อผิดพลาดในการทำงาน: ${error.message}</p>`;
+        }
+    }
+
+    // Helper to convert timeline HTML to plain text
+    const convertTimelineToPlainText = () => {
+        let plainText = '';
+        const timelineItems = timestampDisplayContent.querySelectorAll('.timeline > li');
+        timelineItems.forEach(item => {
+            const timeSpan = item.querySelector('.timeline-start .timestamp-link');
+            const descriptionDiv = item.querySelector('.timeline-end');
+            if (timeSpan && descriptionDiv) {
+                const time = timeSpan.textContent.trim();
+                const description = descriptionDiv.textContent.trim();
+                plainText += `${time} - ${description}\n`;
+            }
+        });
+        return plainText.trim(); // Remove trailing newline
+    };
 
     // Timestamp Display/Edit Mode
     let isEditMode = false;
@@ -210,7 +406,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enterEditMode = () => {
         isEditMode = true;
         timestampDisplayContent.classList.add('hidden');
-        timestampEditContent.value = timestampDisplayContent.innerText;
+        timestampEditContent.value = convertTimelineToPlainText(); // Use the helper function
         timestampEditContent.classList.remove('hidden');
         displayModeBtn.classList.remove('btn-primary');
         displayModeBtn.classList.add('btn-outline');
@@ -242,23 +438,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Convert plain text timestamps to clickable HTML
     const convertTextToClickableTimestamps = (text) => {
-        const timestampRegex = /(\d{1,2}:\d{2}(?::\d{2})?)/g;
-        return text.replace(timestampRegex, (match) => {
-            const parts = match.split(':').map(Number);
-            let seconds = 0;
-            if (parts.length === 3) {
-                seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
-            } else if (parts.length === 2) {
-                seconds = parts[0] * 60 + parts[1];
+        const timestampRegex = /(\d{1,2}:\d{2}(?::\d{2})?)\s*-\s*(.*)/; // Regex to capture time and description
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        let timelineHtml = '<ul class="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">';
+
+        lines.forEach((line, index) => {
+            const match = line.match(timestampRegex);
+            if (match) {
+                const timeString = match[1];
+                const description = match[2].trim();
+                const parts = timeString.split(':').map(Number);
+                let seconds = 0;
+                if (parts.length === 3) {
+                    seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
+                } else if (parts.length === 2) {
+                    seconds = parts[0] * 60 + parts[1];
+                }
+
+                if (index % 2 === 0) { // Even index: content in timeline-start (left side)
+                    timelineHtml += `
+                        <li>
+                            <div class="timeline-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-primary"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="timeline-start mb-10 md:text-end">
+                                <time class="font-mono italic">
+                                    <span class="timestamp-link link link-primary cursor-pointer" data-time="${seconds}">${timeString}</span>
+                                </time>
+                                <div class="text-lg font-black">${description}</div>
+                            </div>
+                            ${index < lines.length - 1 ? '<hr/>' : ''}
+                        </li>
+                    `;
+                } else { // Odd index: content in timeline-end (right side)
+                    timelineHtml += `
+                        <li>
+                            <hr />
+                            <div class="timeline-middle">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5 text-primary"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" /></svg>
+                            </div>
+                            <div class="timeline-end md:mb-10">
+                                <time class="font-mono italic">
+                                    <span class="timestamp-link link link-primary cursor-pointer" data-time="${seconds}">${timeString}</span>
+                                </time>
+                                <div class="text-lg font-black">${description}</div>
+                            </div>
+                            ${index < lines.length - 1 ? '<hr/>' : ''}
+                        </li>
+                    `;
+                }
             }
-            return `<span class="timestamp-link link link-primary cursor-pointer" data-time="${seconds}">${match}</span>`;
         });
+
+        timelineHtml += '</ul>';
+        return timelineHtml;
     };
 
     // Attach click handlers to timestamps
     const attachTimestampClickHandlers = () => {
-        document.querySelectorAll('.timestamp-link').forEach(span => {
-            span.addEventListener('click', (e) => {
+        document.querySelectorAll('.timestamp-link').forEach(btn => {
+            btn.addEventListener('click', (e) => {
                 const time = e.target.dataset.time;
                 if (youtubeVideoPlayer && time !== undefined) {
                     const player = youtubeVideoPlayer.contentWindow;
@@ -267,9 +506,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
-
-    // Initial attachment of handlers
-    attachTimestampClickHandlers();
 
     // Copy Timestamp Button
     if (copyTimestampBtn) {
