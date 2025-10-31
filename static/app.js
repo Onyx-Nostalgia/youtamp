@@ -104,14 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } else if (previewCard) {
                 toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
                 urlInput.classList.toggle('animate-shake', true);
+                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
             }
         } else {
             if (previewCard) {
                 toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
                 urlInput.classList.toggle('animate-shake', true);
+                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
             }
         }
     };
@@ -149,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             closePreviewBtn.addEventListener('click', () => {
                 if (previewCard) {
                     toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-
                 }
             });
         }
@@ -207,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     /**
  * ฟังก์ชันย่อย: แปลง Timestamp (MM:SS หรือ HH:MM:SS) ให้เป็นจำนวนวินาทีทั้งหมด
  * @param {string} customTimeString - เช่น '00:01:30'
@@ -240,18 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return totalSeconds;
     }
 
-    /**
-     * ฟังก์ชันอ่านข้อมูลจากไฟล์ .txt ที่มี Timestamp พร้อมการสร้าง LI ที่มีเงื่อนไข
-     * @returns {Promise<{status: string, html_list: string}>} Object ที่มี HTML String สำหรับแสดงผล
-     */
-    async function readMockData() {
-        // ... ส่วน fetch และการแยก lines ...
-        const url = '/static/timestamps.txt';
 
-        try {
-            const response = await fetch(url);
-            if (!response.ok) { throw new Error(`ไม่พบไฟล์ Mock Data!`); }
-            const rawText = await response.text();
+function convertToTimestamp(rawText) {
             const lines = rawText.split('\n').filter(line => line.trim() !== '');
 
             let htmlContent = '';
@@ -296,30 +284,50 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
 </div>
 <div class="timeline-end timeline-box p-0">
-                <input type="text" placeholder="${text_content}" value="${text_content}"
-                class="input input-ghost" style="field-sizing: content;" /></div>
+                <textarea placeholder="${text_content}"
+                class="textarea textarea-${mainColor} w-auto h-auto rounded-2xl wrap-break-word" style="field-sizing: content;" />${text_content}</textarea></div>
                     `
                     : `
 <div class="timeline-start timeline-box md:text-end p-0">
-                <input type="text" placeholder="${text_content}" value="${text_content}"
-                class="input input-ghost" style="field-sizing: content;" /></div>
+                <textarea placeholder="${text_content}"
+                class="textarea textarea-${mainColor} w-auto h-auto rounded-2xl wrap-break-word" style="field-sizing: content;" />${text_content}</textarea></div>
         <div class="timeline-middle">
             <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
         </div>`;
 
                 htmlContent += `
-       <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-${delay} motion-reduce:animate-none">
+       <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-[${delay}ms] motion-reduce:animate-none">
         ${topHr}
         ${divContent}
         ${bottomHr}
     </li>
     `;
             });
+            return htmlContent;
+
+}
+
+
+    /**
+     * ฟังก์ชันอ่านข้อมูลจากไฟล์ .txt ที่มี Timestamp พร้อมการสร้าง LI ที่มีเงื่อนไข
+     * @returns {Promise<{status: string, html_list: string}>} Object ที่มี HTML String สำหรับแสดงผล
+     */
+    async function readMockData() {
+        // ... ส่วน fetch และการแยก lines ...
+        const url = '/static/timestamps.txt';
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) { throw new Error(`ไม่พบไฟล์ Mock Data!`); }
+
+            const rawText = await response.text();
+            const htmlContent = convertToTimestamp(rawText);
+            
 
             // คืนค่า
             return {
                 status: "success",
-                message: "แสดงผลข้อมูล Timestamp จาก TXT สำเร็จ!",
+                message: "Done!",
                 html_list: htmlContent
             };
 
@@ -339,7 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
  */
     async function sendData(mode) {
         if (!timestampDisplayContent) return; // ป้องกันการทำงานก่อน DOM โหลด
-
+            
         try {
             let result;
 
@@ -348,16 +356,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 timestampDisplayContent.innerHTML = '<p>กำลังโหลด Mock Data...</p>';
                 result = await readMockData();
             } else {
-                // ส่งข้อมูลจริงไปยัง Flask
-                timestampDisplayContent.innerHTML = '<p>กำลังส่งข้อมูลจริงไปยัง Flask...</p>';
 
+                timestampDisplayContent.innerHTML = '<p>กำลังส่งข้อมูลจริงไปยัง Flask...</p>';
                 const dataToSend = {
-                    // input_username: usernameInput.value.trim(),
-                    // select_option: selectElement.value,
-                    // text_area_notes: notesElement.value.trim()
+                    url : youtubeUrlInput ? youtubeUrlInput.value.trim() : '', 
+                    additional_instruction: additionalDetailsTextarea ? additionalDetailsTextarea.value : '',
+                    language: languageSelect ? languageSelect.value : 'auto'
                 };
 
-                const response = await fetch('/api/process_data', {
+                const response = await fetch('/api/timestamp/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)

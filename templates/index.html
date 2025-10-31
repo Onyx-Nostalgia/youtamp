@@ -131,9 +131,9 @@
                     {% include '_hero_input_section.html' %}
                     {% endwith %}
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-2">
                     <!-- คอลัมน์ซ้าย: Video Player -->
-                    <div class="lg:col-span-2">
+                    <div class="lg:col-span-1">
                         <div class="card bg-base-300 shadow-xl w-full aspect-video rounded-xl overflow-hidden">
                             <iframe id="youtube-video-player" class="w-full h-full" src="about:blank"
                                 title="YouTube video player" frameborder="0"
@@ -158,7 +158,7 @@
 
                         <!-- Timestamp Display/Edit Section -->
                         <div id="timestamp-section"
-                            class="card bg-base-200 shadow-xl grow p-4 overflow-y-auto text-base-content">
+                            class="card bg-base-200 shadow-xl grow p-4 overflow-y-auto text-base-content wrap-break-word">
                             <!-- Mock Timestamp Content -->
                             {% include '_timestamp_display.html' %}
                             <textarea id="timestamp-edit-content"
