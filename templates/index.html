@@ -42,7 +42,7 @@
                 <!-- Theme and Language Toggles -->
                 <div class="flex items-center space-x-4">
                     <!-- Theme Toggle -->
-                    <label class="swap btn swap-rotate btn-circle">
+                    <label class="swap btn swap-rotate btn-circle text-neutral">
                         <!-- this hidden checkbox controls the state -->
                         <input type="checkbox" class="theme-controller" value="forest" />
 
@@ -68,7 +68,7 @@
                     <!-- Language Toggle -->
                     <div class="dropdown dropdown-end">
                         <div tabindex="0" role="button"
-                            class="btn btn-sm btn-ghost gap-1 px-1.5 text-[.5625rem] font-bold" aria-label="Language"
+                            class="btn btn-ghost btn-circle gap-1 px-1.5 text-[.5625rem] font-bold text-neutral" aria-label="Language"
                             title="Change Language">
                             <span class="w-6 h-6 icon-[ic--baseline-language]"></span>
                         </div>
@@ -124,18 +124,17 @@
             </section>
 
             <!-- ===== App View Section (Hidden by default, appears after generation) ===== -->
-            <section id="app-view-section"
-                class="hidden animate-fade-in-bounceup container mx-auto px-2 py-2 md:py-4 relative opacity-0">
-                <div class="card bg-base-200 shadow-xl mb-8 p-4">
+            <section id="app-view-section" class="hidden container mx-auto px-2 py-2 md:py-4 relative">
+                <div class="animate-fade-down animate-once animate-ease-out card bg-base-200 shadow-xl mb-8 p-4">
                     {% with section='appview' %}
                     {% include '_hero_input_section.html' %}
                     {% endwith %}
                 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-2">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-2 md:gap-2  overflow-hidden h-full">
                     <!-- คอลัมน์ซ้าย: Video Player -->
-                    <div class="lg:col-span-1">
-                        <div class="card bg-base-300 shadow-xl w-full aspect-video rounded-xl overflow-hidden">
-                            <iframe id="youtube-video-player" class="w-full h-full" src="about:blank"
+                    <div class="animate-fade-right animate-once animate-ease-out col-span-full lg:col-span-1">
+                        <div class="skeleton bg-base-300 shadow-xl lg:w-full aspect-video rounded-xl">
+                            <iframe id="youtube-video-player" class="w-full h-full rounded-xl" src="about:blank"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
@@ -144,29 +143,65 @@
                     </div>
 
                     <!-- คอลัมน์ขวา: Control Section & Timestamp Display/Edit -->
-                    <div class="lg:col-span-1 flex flex-col">
-                        <!-- Control Section -->
-                        <div class="flex justify-between items-center mb-4">
-                            <div class="join">
-                                <button id="display-mode-btn" class="btn join-item btn-primary btn-sm">แสดงผล</button>
-                                <button id="edit-mode-btn" class="btn join-item btn-secondary btn-sm">แก้ไข</button>
+                    <div
+                        class="animate-fade-left animate-once animate-ease-out col-span-full lg:col-span-1 flex flex-col">
+
+                        <div class="tab-loading flex w-full h-full">
+                            <div class="flex mx-auto my-auto flex-col gap-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="skeleton h-16 w-16 shrink-0 rounded-full"></div>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="skeleton h-4 w-20"></div>
+                                        <div class="skeleton h-4 w-28"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="skeleton h-16 w-16 shrink-0 rounded-full"></div>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="skeleton h-4 w-20"></div>
+                                        <div class="skeleton h-4 w-28"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="skeleton h-16 w-16 shrink-0 rounded-full"></div>
+                                    <div class="flex flex-col gap-4">
+                                        <div class="skeleton h-4 w-20"></div>
+                                        <div class="skeleton h-4 w-28"></div>
+                                    </div>
+                                </div>
                             </div>
-                            <button id="copy-timestamp-btn" class="btn btn-info btn-sm">
-                                คัดลอก
-                            </button>
                         </div>
 
-                        <!-- Timestamp Display/Edit Section -->
-                        <div id="timestamp-section"
-                            class="card bg-base-200 shadow-xl grow p-4 overflow-y-auto text-base-content wrap-break-word">
-                            <!-- Mock Timestamp Content -->
-                            {% include '_timestamp_display.html' %}
-                            <textarea id="timestamp-edit-content"
-                                class="hidden textarea textarea-bordered textarea-primary w-full h-full"
-                                rows="10"></textarea>
+                        <div class="tab-timestamp tabs tabs-lift hidden">
+                            <label id="display-mode-btn"
+                                class="tab  [--tab-bg:var(--color-primary)] [--tab-border-color:var(--color-primary)]">
+                                <input type="radio" name="my_tabs_4" checked="checked" class="peer" />
+                                <span class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
+                                Timeline
+                            </label>
+                            <div class="tab-content bg-base-100 border-base-300 p-6">
+                                <div id="timestamp-section" class="overflow-y-auto text-base-content wrap-break-word">
+                                    {% include '_timestamp_display.html' %}
+                                </div>
+                            </div>
+
+                            <label id="edit-mode-btn"
+                                class="tab [--tab-bg:var(--color-secondary)] [--tab-border-color:var(--color-secondary)]">
+                                <input type="radio" name="my_tabs_4" class="peer" />
+                                <span class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
+                                Comment
+                            </label>
+                            <div class="tab-content bg-base-100 border-base-300 p-6">Tab content 2</div>
+
+                            <div class="ml-auto">
+                                <div id="copy-timestamp-btn" class="tooltip tooltip-left tooltip-info" data-tip="Copy">
+                                    <button class="btn btn-circle btn-info text-xl">
+                                        <span class="icon-[tabler--copy]"></span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </section>
 
