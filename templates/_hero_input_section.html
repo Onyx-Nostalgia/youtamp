@@ -18,7 +18,7 @@
             </svg>
             <input type="url" data-youtube-url-input
                 pattern="^(https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([^\s&]+))$"
-                value="https://www.youtube.com/watch?v=-5R-aLmZ9Ps"
+                value="https://www.youtube.com/watch?v=4Jb35R2MZ_c"
                 placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
             <button
                 class="btn btn-primary btn-circle btn-xl hover:bg-primary-content hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out"
@@ -29,22 +29,22 @@
         </label>
 
         <!-- Preview Card -->
-        <div class="flex absolute card card-xs card-side preview-card bg-secondary/90 hover:bg-secondary text-secondary-content shadow-sm
+        <div class="flex absolute card card-xs card-side preview-card bg-secondary/80 hover:bg-secondary text-secondary-content shadow-sm
     {% if section == 'appview' %} 
-         top-full sm:right-0 md:left-1/2 md:transform md:-translate-x-1/2
+         top-12 right-0 lg:left-1/2 lg:transform lg:-translate-x-1/2
     {% else %}
         md:left-1/2 w-full md:-translate-x-1/2
         bottom-full transform -translate-y-2 max-h-20 sm:max-h-32
     {% endif %}
         overflow-hidden" >
-            <figure class="p-0 md:p-2 hidden sm:flex sm:max-w-32 md:max-w-40">
+            <figure class="p-0 md:p-2 hidden sm:flex sm:max-w-28 md:max-w-32">
                 <img src="" alt="Thumbnail" data-video-thumbnail class="skeleton rounded-2xl" />
             </figure>
             <div class="card-body relative ml-0">
-                <div class="card-title" data-video-title>
+                <div class="sm:card-title truncate max-w-xs sm:text-wrap sm:max-w-full" data-video-title>
                     <div class="skeleton h-4 w-80"></div>
                 </div>
-                <div data-video-author class="m-0">
+                <div data-video-author class="truncate max-w-xs sm:text-wrap sm:max-w-full m-0">
                     <div class="skeleton h-4 w-80"></div>
                 </div>
                 <div class="card-actions absolute bottom-1 right-2">
