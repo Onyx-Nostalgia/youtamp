@@ -11,12 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const timestampEditContent = document.getElementById('timestamp-edit-content');
     const currentYearSpan = document.getElementById('current-year');
 
-    /**
-     * @param {HTMLElement} element 
-     * @param {string} classOnTrue - Class ที่ต้องการให้มีเมื่อเงื่อนไขเป็นจริง
-     * @param {string} classOnFalse - Class ที่ต้องการให้มีเมื่อเงื่อนไขเป็นเท็จ
-     * @param {boolean} condition - เงื่อนไขที่ใช้ในการสลับ
-     */
+    const tabLoading = document.querySelector(".tab-loading")
+    const tabTimestamp = document.querySelector(".tab-timestamp")
+
     const toggleClassPair = (element, classOnTrue, classOnFalse, condition) => {
         element.classList.toggle(classOnTrue, condition);
         element.classList.toggle(classOnFalse, !condition);
@@ -64,7 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return {
                 thumbnail: data.thumbnail_url,
                 title: data.title,
-                author: data.author_name
+                author: data.author_name,
+                author_url: data.author_url
             };
         } catch (error) {
             return
@@ -95,9 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (videoThumbnail) { videoThumbnail.src = details.thumbnail };
                 if (videoTitle) {
                     videoTitle.textContent = details.title
-                    videoTitle.setAttribute('data-tip', details.title);
                 };
-                if (videoAuthor) videoAuthor.textContent = details.author;
+                if (videoAuthor) videoAuthor.innerHTML = `<a href="${details.author_url}" target="_blank">${details.author}</a>`;
                 toggleClassPair(urlInput, 'input-primary', 'input-error', true);
                 toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', true);
                 urlInput.classList.toggle('animate-shake', false);
@@ -120,13 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle URL input and preview card for all input sections
     document.querySelectorAll('[input-section]').forEach(inputSection => {
         const youtubeUrlInput = inputSection.querySelector('[data-youtube-url-input]');
-        const urlInput = inputSection.querySelector('.url-input');
         const generateButton = inputSection.querySelector('[data-generate-button]');
         const previewCard = inputSection.querySelector('.preview-card');
         const closePreviewBtn = previewCard ? previewCard.querySelector('.btn-close') : null;
-        const videoThumbnail = previewCard ? previewCard.querySelector('[data-video-thumbnail]') : null;
-        const videoTitle = previewCard ? previewCard.querySelector('[data-video-title]') : null;
-        const videoAuthor = previewCard ? previewCard.querySelector('[data-video-author]') : null;
         const additionalDetailsTextarea = inputSection.querySelector('[data-additional-details]');
         const languageSelect = inputSection.querySelector('[data-language-select]');
 
@@ -199,9 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     appViewSection.classList.remove('opacity-0');
                 }, 50);
 
-                if (timestampDisplayContent) {
-                    sendData('mock');
-                }
+                sendData('mock');
             });
         }
     });
@@ -262,7 +253,6 @@ function convertToTimestamp(rawText) {
                 const isFirst = (index === 0);
                 const isLast = (index === totalItems - 1);
 
-                // HR Tailwind Styles (เปลี่ยนสีตามคู่/คี่)
                 const previousColor = index % 2 === 0
                     ? 'primary'
                     : 'secondary';
@@ -272,33 +262,18 @@ function convertToTimestamp(rawText) {
 
                 const delay = 50 + (index * 50);
 
-                // HR ด้านบน: จะแสดงถ้าไม่ใช่รายการแรก
                 const topHr = isFirst ? '' : `<hr class="bg-${previousColor}" />`;
-
-                // HR ด้านล่าง: จะแสดงถ้าไม่ใช่รายการสุดท้าย
                 const bottomHr = isLast ? '' : `<hr class="bg-${mainColor}" />`;
-
-                const divContent = index % 2 === 0
-                    ? `
-<div class="timeline-middle">
-    <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
-</div>
-<div class="timeline-end timeline-box p-0">
-                <textarea placeholder="${text_content}"
-                class="textarea textarea-${mainColor} w-auto h-auto rounded-2xl wrap-break-word" style="field-sizing: content;" />${text_content}</textarea></div>
-                    `
-                    : `
-<div class="timeline-start timeline-box md:text-end p-0">
-                <textarea placeholder="${text_content}"
-                class="textarea textarea-${mainColor} w-auto h-auto rounded-2xl wrap-break-word" style="field-sizing: content;" />${text_content}</textarea></div>
-        <div class="timeline-middle">
-            <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
-        </div>`;
 
                 htmlContent += `
        <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-[${delay}ms] motion-reduce:animate-none">
         ${topHr}
-        ${divContent}
+        <div class="timeline-middle">
+    <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${timestamp}</div>
+</div>
+<div class="timeline-end timeline-box p-0">
+    <textarea placeholder="${text_content}"
+        class="textarea textarea-${mainColor} w-auto h-auto rounded-2xl wrap-break-word" style="field-sizing: content;">${text_content}</textarea></div>
         ${bottomHr}
     </li>
     `;
@@ -346,8 +321,6 @@ function convertToTimestamp(rawText) {
  * @param {'live' | 'mock'} mode กำหนดว่าจะส่งไป Flask จริง หรือใช้ Mock Data
  */
     async function sendData(mode) {
-        if (!timestampDisplayContent) return; // ป้องกันการทำงานก่อน DOM โหลด
-            
         try {
             let result;
 
@@ -379,15 +352,19 @@ function convertToTimestamp(rawText) {
             // 5. แสดงผลลัพธ์ (ไม่ว่าจะมาจาก Live หรือ Mock)
             if (result.status === 'success') {
                 timestampDisplayContent.innerHTML = result.html_list;
-                    // Initial attachment of handlers
-    attachTimestampClickHandlers();
+                // Initial attachment of handlers
+                attachTimestampClickHandlers();
+                tabLoading.classList.add('hidden')
+                tabTimestamp.classList.remove("hidden")
             } else {
                 timestampDisplayContent.innerHTML = `<p style="color: red;">❌ Error: ${result.message}</p>`;
+                tabLoading.classList.remove('hidden')
+                tabTimestamp.classList.add("hidden")
             }
 
         } catch (error) {
-            console.error('Operation Error:', error);
             timestampDisplayContent.innerHTML = `<p style="color: red;">เกิดข้อผิดพลาดในการทำงาน: ${error.message}</p>`;
+            console.error('Operation Error:', error);
         }
     }
 
@@ -518,12 +495,22 @@ function convertToTimestamp(rawText) {
     if (copyTimestampBtn) {
         copyTimestampBtn.addEventListener('click', () => {
             const textToCopy = isEditMode ? timestampEditContent.value : timestampDisplayContent.innerText;
+            const button = copyTimestampBtn.querySelector(".btn")
             navigator.clipboard.writeText(textToCopy).then(() => {
                 // Optional: Show a tooltip or temporary message
-                console.log('Timestamps copied to clipboard!');
-                copyTimestampBtn.textContent = 'คัดลอกแล้ว!';
+                button.innerHTML = `<span class="icon-[tabler--copy-check-filled] text-xl"></span>`;
+                button.classList.remove("btn-info")
+                button.classList.add("btn-success")
+                copyTimestampBtn.classList.add("tooltip-open")
+                copyTimestampBtn.classList.add("tooltip-success")
+                copyTimestampBtn.setAttribute("data-tip","Copied!")
                 setTimeout(() => {
-                    copyTimestampBtn.textContent = 'คัดลอก';
+                    button.innerHTML = `<span class="icon-[tabler--copy] text-xl"></span>`;
+                    button.classList.add("btn-info")
+                    button.classList.remove("btn-success")
+                    copyTimestampBtn.classList.remove("tooltip-open")
+                    copyTimestampBtn.classList.remove("tooltip-success")
+                    copyTimestampBtn.setAttribute("data-tip","Copy!")
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy timestamps: ', err);
