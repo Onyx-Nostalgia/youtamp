@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const timestampDisplayContent = document.getElementById('timestamp-display-content');
     const currentYearSpan = document.getElementById('current-year');
 
+    const appViewInputSection = document.getElementById('app-view-input-section');
+
     const tabLoading = document.querySelector(".tab-loading")
     const tabTimestamp = document.querySelector(".tab-timestamp")
     const timelineTab = document.getElementById('timeline-tab');
@@ -18,6 +20,35 @@ document.addEventListener('DOMContentLoaded', () => {
         element.classList.toggle(classOnTrue, condition);
         element.classList.toggle(classOnFalse, !condition);
     };
+
+    const setPreviewCardVisibility = (previewCardElement, isVisible) => {
+        const showClasses = ['animate-fade-in-bounceup'];
+        const hideClasses = ['animate-fade-up', 'animate-ease-in-out', 'animate-reverse', 'animate-fill-forwards'];
+        // Default duration for tailwindcss-animated is 1s (1000ms)
+        const animationDuration = 1000;
+
+        if (previewCardElement) {
+            // Clear any pending timeout to prevent race conditions
+            if (previewCardElement.hideTimeout) {
+                clearTimeout(previewCardElement.hideTimeout);
+                previewCardElement.hideTimeout = null;
+            }
+
+            if (isVisible) {
+                previewCardElement.classList.remove('hidden');
+                previewCardElement.classList.remove(...hideClasses);
+                previewCardElement.classList.add(...showClasses);
+            } else {
+                previewCardElement.classList.remove(...showClasses);
+                previewCardElement.classList.add(...hideClasses);
+
+                previewCardElement.hideTimeout = setTimeout(() => {
+                    previewCardElement.classList.add('hidden');
+                }, animationDuration);
+            }
+        }
+    };
+
 
     // Set current year in footer
     if (currentYearSpan) {
@@ -69,7 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Refactored handleUrlChange to accept an inputSection element
+    const updateInputState = (urlInput, previewCard, isValid) => {
+        toggleClassPair(urlInput, 'input-primary', 'input-error', isValid);
+        urlInput.classList.toggle('animate-shake', !isValid);
+        if (previewCard) {
+            setPreviewCardVisibility(previewCard, isValid);
+        }
+    };
+
     const handleUrlChangeForSection = async (currentInputSection) => {
         const youtubeUrlInput = currentInputSection.querySelector('[data-youtube-url-input]');
         const urlInput = currentInputSection.querySelector('.url-input');
@@ -79,38 +117,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const videoAuthor = previewCard ? previewCard.querySelector('[data-video-author]') : null;
 
         const url = youtubeUrlInput.value.trim();
-        if (validateUrl(url)) {
-            const videoId = getVideoIdFromUrl(url);
+        const videoId = validateUrl(url) ? getVideoIdFromUrl(url) : null;
 
-            if (videoId && videoId.length === 11 && previewCard) {
-                const details = await fetchVideoDetails(videoId);
-                if (!details) {
-                    toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-                    toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                    urlInput.classList.toggle('animate-shake', true);
-                    return;
-                }
-                if (videoThumbnail) { videoThumbnail.src = details.thumbnail };
-                if (videoTitle) {
-                    videoTitle.textContent = details.title
-                };
-                if (videoAuthor) videoAuthor.innerHTML = `<a href="${details.author_url}" target="_blank">${details.author}</a>`;
-                toggleClassPair(urlInput, 'input-primary', 'input-error', true);
-                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', true);
-                urlInput.classList.toggle('animate-shake', false);
-
-            } else if (previewCard) {
-                toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                urlInput.classList.toggle('animate-shake', true);
-                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-            }
-        } else {
-            if (previewCard) {
-                toggleClassPair(urlInput, 'input-primary', 'input-error', false);
-                urlInput.classList.toggle('animate-shake', true);
-                toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
-            }
+        if (!videoId || videoId.length !== 11 || !previewCard) {
+            updateInputState(urlInput, previewCard, false);
+            return;
         }
+
+        const details = await fetchVideoDetails(videoId);
+
+        if (!details) {
+            updateInputState(urlInput, previewCard, false);
+            return;
+        }
+
+        // Success case
+        if (videoThumbnail) { videoThumbnail.src = details.thumbnail; }
+        if (videoTitle) { videoTitle.textContent = details.title; }
+        if (videoAuthor) { videoAuthor.innerHTML = `<a href="${details.author_url}" target="_blank">${details.author}</a>`; }
+        updateInputState(urlInput, previewCard, true);
     };
 
 
@@ -141,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (closePreviewBtn) {
             closePreviewBtn.addEventListener('click', () => {
                 if (previewCard) {
-                    toggleClassPair(previewCard, 'animate-fade-in-bounceup', 'animate-fade-out-down', false);
+                    setPreviewCardVisibility(previewCard, false);
                 }
             });
         }
@@ -306,9 +331,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Return the HTML for the button
                 return `<button class="btn btn-xs btn-${mainColor} timestamp-link" data-time="${secondsValue}">${formattedTimestamp}</button>`;
             });
-
+            
             htmlContent += `
-                <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-[${delay}ms] motion-reduce:animate-none">
+                <li class="animate-appear motion-reduce:animate-none">
                     ${topHr}
                     <div class="timeline-middle">
                         <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${displayTimestamp}</div>
@@ -528,9 +553,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (scrollTop > lastScrollTop) {
             // Scrolling down
             navbar.style.transform = 'translateY(-100%)';
+            if (appViewInputSection) {
+                appViewInputSection.style.transform = 'translateY(-100%)';
+            }
         } else {
             // Scrolling up
             navbar.style.transform = 'translateY(0)';
+            if (appViewInputSection) {
+                appViewInputSection.style.transform = 'translateY(0)';
+            }
         }
         lastScrollTop = scrollTop;
     });
