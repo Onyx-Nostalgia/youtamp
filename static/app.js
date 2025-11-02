@@ -250,115 +250,77 @@ document.addEventListener('DOMContentLoaded', () => {
             // If it's an empty line or a line without a timestamp and no previous timestamp, it's ignored.
         });
 
-                let hasHHMMSS = false;
+        let hasHHMMSS = false;
+        parsedTimestamps.forEach(item => {
+            const seconds = convertToSeconds(item.timestamp);
+            if (seconds !== null && seconds >= 3600) { // If hours are present
+                hasHHMMSS = true;
+            } else if (item.timestamp.length === 8) { // If it was explicitly HH:MM:SS
+                hasHHMMSS = true;
+            }
+        });
 
-                parsedTimestamps.forEach(item => {
+        let htmlContent = '';
+        const totalItems = parsedTimestamps.length;
 
-                    const seconds = convertToSeconds(item.timestamp);
+        parsedTimestamps.forEach((item, index) => {
+            const originalTimestamp = item.timestamp;
+            const text_content = item.description;
+            const secondsValue = convertToSeconds(originalTimestamp);
 
-                    if (seconds !== null && seconds >= 3600) { // If hours are present
+            if (secondsValue === null) {
+                console.warn(`Skipping invalid timestamp format: ${originalTimestamp}`);
+                return;
+            }
 
-                        hasHHMMSS = true;
+            // Use the modified convertSecondsToTimestamp function
+            const displayTimestamp = convertSecondsToTimestamp(secondsValue, hasHHMMSS);
 
-                    } else if (item.timestamp.length === 8) { // If it was explicitly HH:MM:SS
+            const isFirst = (index === 0);
+            const isLast = (index === totalItems - 1);
 
-                        hasHHMMSS = true;
+            const previousColor = index % 2 === 0
+                ? 'primary'
+                : 'secondary';
+            const mainColor = index % 2 === 0
+                ? 'secondary'
+                : 'primary';
 
-                    }
+            const delay = 50 + (index * 50);
 
-                });
+            const topHr = isFirst ? '' : `<hr class="bg-${previousColor}" />`;
+            const bottomHr = isLast ? '' : `<hr class="bg-${mainColor}" />`;
 
-        
+            let processedTextContent = text_content.replace(/\n/g, '<br>'); // Replace newlines with <br> for HTML rendering
+            const inlineTimestampRegex = /\b(\d{1,2}:\d{2}(:\d{2})?)\b/g; // Global flag for multiple matches
 
-                let htmlContent = '';
+            processedTextContent = processedTextContent.replace(inlineTimestampRegex, (match, timestampStr) => {
+                const secondsValue = convertToSeconds(timestampStr);
+                if (secondsValue === null) {
+                    return match; // If invalid, don't change
+                }
 
-                const totalItems = parsedTimestamps.length;
+                // Apply the same formatting logic as for main timestamps
+                const formattedTimestamp = convertSecondsToTimestamp(secondsValue, hasHHMMSS);
 
-        
+                // Return the HTML for the button
+                return `<button class="btn btn-xs btn-${mainColor} timestamp-link" data-time="${secondsValue}">${formattedTimestamp}</button>`;
+            });
 
-                parsedTimestamps.forEach((item, index) => {
-
-                    const originalTimestamp = item.timestamp;
-
-                    const text_content = item.description;
-
-                    const secondsValue = convertToSeconds(originalTimestamp);
-
-        
-
-                    if (secondsValue === null) {
-
-                        console.warn(`Skipping invalid timestamp format: ${originalTimestamp}`);
-
-                        return;
-
-                    }
-
-        
-
-                    // Use the modified convertSecondsToTimestamp function
-
-                    const displayTimestamp = convertSecondsToTimestamp(secondsValue, hasHHMMSS);
-
-        
-
-                    const isFirst = (index === 0);
-
-                    const isLast = (index === totalItems - 1);
-
-        
-
-                    const previousColor = index % 2 === 0
-
-                        ? 'primary'
-
-                        : 'secondary';
-
-                    const mainColor = index % 2 === 0
-
-                        ? 'secondary'
-
-                        : 'primary';
-
-        
-
-                    const delay = 50 + (index * 50);
-
-        
-
-                    const topHr = isFirst ? '' : `<hr class="bg-${previousColor}" />`;
-
-                    const bottomHr = isLast ? '' : `<hr class="bg-${mainColor}" />`;
-
-        
-
-                    htmlContent += `
-
-               <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-[${delay}ms] motion-reduce:animate-none">
-
-                ${topHr}
-
-                <div class="timeline-middle">
-
-            <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${displayTimestamp}</div>
-
-        </div>
-
-        <div class="timeline-end timeline-box p-0">
-
-            <textarea placeholder="${text_content}"
-
-                class="textarea textarea-${mainColor} w-auto h-auto rounded-2xl wrap-break-word" style="field-sizing: content;">${text_content}</textarea></div>
-
-                ${bottomHr}
-
-            </li>
-
+            htmlContent += `
+                <li class="animate-jump-in animate-once animate-ease-in-out animate-play animate-delay-[${delay}ms] motion-reduce:animate-none">
+                    ${topHr}
+                    <div class="timeline-middle">
+                        <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${displayTimestamp}</div>
+                    </div>
+                    <div class="timeline-end timeline-box">
+                        <div class="timeline-description w-auto h-auto rounded-2xl wrap-break-word">${processedTextContent}</div>
+                    </div>
+                    ${bottomHr}
+                </li>
             `;
-
-                });
+        });
         return htmlContent;
-
     }
 
 
@@ -458,15 +420,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const convertTimelineToText = () => {
         const lines = [];
         const listItems = timestampDisplayContent.querySelectorAll('li');
+        // Regex to find the inline buttons and capture their text content (the timestamp)
+        const inlineButtonRegex = /<button[^>]*class="[^\"]*timestamp-link[^\"]*"[^>]*data-time="\d+"[^>]*>(\d{1,2}:\d{2}(:\d{2})?)<\/button>/g;
 
         listItems.forEach(li => {
-            const timestampLink = li.querySelector('.timestamp-link');
-            const textarea = li.querySelector('textarea');
+            const timestampLink = li.querySelector('.timestamp-link'); // Main timestamp button
+            const descriptionDiv = li.querySelector('.timeline-description'); // The new div for description
 
-            if (timestampLink && textarea) {
-                const timestamp = timestampLink.textContent.trim(); // e.g., "00:01:30"
-                const textContent = textarea.value.trim(); // e.g., "Some text here"
-                lines.push(`${timestamp} ${textContent}`);
+            if (timestampLink && descriptionDiv) {
+                const mainTimestamp = timestampLink.textContent.trim(); // e.g., "00:01:30"
+                let descriptionContent = descriptionDiv.innerHTML; // Get HTML content from the div
+
+                // Convert inline buttons back to plain timestamps
+                descriptionContent = descriptionContent.replace(inlineButtonRegex, (match, timestampStr) => {
+                    return timestampStr; // Replace button HTML with just the timestamp string
+                });
+
+                // Replace <br> tags with newlines for plain text conversion
+                descriptionContent = descriptionContent.replace(/<br\s*\/?>/gi, '\n');
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = descriptionContent;
+                const plainDescription = tempDiv.textContent || tempDiv.innerText || '';
+
+                lines.push(`${mainTimestamp} ${plainDescription.trim()}`);
             }
         });
         return lines.join('\n');
@@ -491,6 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const rawText = commentTabContent.value;
             const timeline = convertToTimestamp(rawText)
             timestampDisplayContent.innerHTML = timeline;
+            attachTimestampClickHandlers(); // Re-attach handlers after content update
         })
     }
 
