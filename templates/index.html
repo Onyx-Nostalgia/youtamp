@@ -142,10 +142,11 @@
                         </div>
                     </div>
 
-                    <!-- คอลัมน์ขวา: Control Section & Timestamp Display/Edit -->
+                    <!-- คอลัมน์ขวา: Timestamp Display/Edit -->
                     <div
                         class="animate-fade-left animate-once animate-ease-out col-span-full lg:col-span-1 flex flex-col">
 
+                        <!-- skeleton tab loading -->
                         <div class="tab-loading flex w-full h-full">
                             <div class="flex mx-auto my-auto flex-col gap-4">
                                 <div class="flex items-center gap-4">
@@ -173,25 +174,28 @@
                         </div>
 
                         <div class="tab-timestamp tabs tabs-lift hidden">
-                            <label id="display-mode-btn"
+                            <label id="timeline-tab"
                                 class="tab  [--tab-bg:var(--color-primary)] [--tab-border-color:var(--color-primary)]">
                                 <input type="radio" name="my_tabs_4" checked="checked" class="peer" />
                                 <span class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
                                 Timeline
                             </label>
                             <div class="tab-content bg-base-100 border-base-300 p-6">
-                                <div id="timestamp-section" class="overflow-y-auto text-base-content wrap-break-word">
+                                <div class="overflow-y-auto text-base-content wrap-break-word">
                                     {% include '_timestamp_display.html' %}
                                 </div>
                             </div>
 
-                            <label id="edit-mode-btn"
+                            <label
+                                id="comment-tab"
                                 class="tab [--tab-bg:var(--color-secondary)] [--tab-border-color:var(--color-secondary)]">
                                 <input type="radio" name="my_tabs_4" class="peer" />
                                 <span class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
                                 Comment
                             </label>
-                            <div class="tab-content bg-base-100 border-base-300 p-6">Tab content 2</div>
+                            <div class="tab-content bg-base-100 border-base-300 p-6">
+                                <textarea class="textarea w-full h-full border-0 rounded-xl textarea-ghost" style="field-sizing: content;" id="comment-tab-content"></textarea>
+                            </div>
 
                             <div class="ml-auto">
                                 <div id="copy-timestamp-btn" class="tooltip tooltip-left tooltip-info" data-tip="Copy">
