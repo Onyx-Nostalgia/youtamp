@@ -3,7 +3,7 @@
 @import "tailwindcss-animated";
 
 @plugin "daisyui" {
-    themes: bumblebee --default, bumblebee-dark --prefersdark;
+    themes: pastel --default, bumblebee-dark --prefersdark;
 }
 
 
