@@ -3,123 +3,46 @@
 @import "tailwindcss-animated";
 
 @plugin "daisyui" {
-    themes: pastel --default, forest --prefersdark;
+    themes: bumblebee --default, bumblebee-dark --prefersdark;
 }
+
 
 @plugin "daisyui/theme" {
-    name: "youtamp-light";
-    color-scheme: light;
-
-    --color-base-100: oklch(90% 0.01 240);
-    /* #D3D0CB */
-    --color-base-200: oklch(95% 0.01 240);
-    /* A lighter shade for elevation */
-    --color-base-300: oklch(85% 0.01 240);
-    /* A darker shade for elevation */
-    --color-base-content: oklch(15% 0.01 240);
-    /* #1E2019 */
-
-    --color-primary: #e2c044;
-    /* #e2c044 */
-    --color-primary-content: oklch(100% 0 0);
-    /* White */
-
-    --color-secondary: oklch(45% 0.05 200);
-    /* #587B7F */
-    --color-secondary-content: oklch(100% 0 0);
-    /* White */
-
-    --color-accent: oklch(70% 0.15 80);
-    /* #E2C044 */
-    --color-accent-content: oklch(100% 0 0);
-    /* White */
-
-    --color-neutral: oklch(25% 0.01 240);
-    /* #393E41 */
-    --color-neutral-content: oklch(100% 0 0);
-    /* White */
-
-    --color-info: oklch(70% 0.2 220);
-    --color-info-content: oklch(98% 0.01 220);
-
-    --color-success: oklch(65% 0.25 140);
-    --color-success-content: oklch(98% 0.01 140);
-
-    --color-warning: oklch(80% 0.25 80);
-    --color-warning-content: oklch(20% 0.05 80);
-
-    --color-error: oklch(65% 0.3 30);
-    --color-error-content: oklch(98% 0.01 30);
-
-    --radius-selector: 1rem;
-    --radius-field: 0.5rem;
-    --radius-box: 1rem;
-
-    --size-selector: 0.25rem;
-    --size-field: 0.25rem;
-
-    --border: 1px;
-    --depth: 1;
-    --noise: 0;
+  name: "bumblebee-dark";
+  default: false;
+  prefersdark: false;
+  color-scheme: "dark";
+  --color-base-100: oklch(13% 0.028 261.692);
+  --color-base-200: oklch(21% 0.034 264.665);
+  --color-base-300: oklch(27% 0.033 256.848);
+  --color-base-content: oklch(96% 0.003 264.542);
+  --color-primary: oklch(81% 0.111 293.571);
+  --color-primary-content: oklch(28% 0.141 291.089);
+  --color-secondary: oklch(83% 0.128 66.29);
+  --color-secondary-content: oklch(26% 0.079 36.259);
+  --color-accent: oklch(90% 0.182 98.111);
+  --color-accent-content: oklch(28% 0.066 53.813);
+  --color-neutral: oklch(37% 0.034 259.733);
+  --color-neutral-content: oklch(98% 0.002 247.839);
+  --color-info: oklch(62% 0.214 259.815);
+  --color-info-content: oklch(97% 0.014 254.604);
+  --color-success: oklch(69% 0.17 162.48);
+  --color-success-content: oklch(97% 0.021 166.113);
+  --color-warning: oklch(79% 0.184 86.047);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(63% 0.237 25.331);
+  --color-error-content: oklch(97% 0.013 17.38);
+  --radius-selector: 1rem;
+  --radius-field: 2rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 2px;
+  --depth: 0;
+  --noise: 0;
 }
 
-@plugin "daisyui/theme" {
-    name: "youtamp-dark";
-    color-scheme: dark;
-
-    --color-base-100: oklch(15% 0.01 240);
-    /* #1E2019 */
-    --color-base-200: oklch(25% 0.01 240);
-    /* #393E41 */
-    --color-base-300: oklch(35% 0.01 240);
-    /* Slightly lighter dark */
-    --color-base-content: oklch(90% 0.01 240);
-    /* #D3D0CB */
-
-    --color-primary: #e2c044;
-    /* #E2C044 */
-    --color-primary-content: oklch(100% 0 0);
-    /* White */
-
-    --color-secondary: oklch(45% 0.05 200);
-    /* #587B7F */
-    --color-secondary-content: oklch(100% 0 0);
-    /* White */
-
-    --color-accent: oklch(70% 0.15 80);
-    /* #E2C044 */
-    --color-accent-content: oklch(100% 0 0);
-    /* White */
-
-    --color-neutral: oklch(90% 0.01 240);
-    /* #D3D0CB */
-    --color-neutral-content: oklch(15% 0.01 240);
-    /* Black */
-
-    --color-info: oklch(70% 0.2 220);
-    --color-info-content: oklch(98% 0.01 220);
-
-    --color-success: oklch(65% 0.25 140);
-    --color-success-content: oklch(98% 0.01 140);
-
-    --color-warning: oklch(80% 0.25 80);
-    --color-warning-content: oklch(20% 0.05 80);
-
-    --color-error: oklch(65% 0.3 30);
-    --color-error-content: oklch(98% 0.01 30);
-
-    --radius-selector: 1rem;
-    --radius-field: 0.5rem;
-    --radius-box: 1rem;
-
-    --size-selector: 0.25rem;
-    --size-field: 0.25rem;
-
-    --border: 1px;
-    --depth: 1;
-    --noise: 0;
-}
-
+    
 @theme {
     --font-sans: 'Noto Sans Thai Looped', sans-serif;
 }
