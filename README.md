@@ -2,9 +2,11 @@
 
 <div align="center">
 
-<img src="./docs/images/preview_1.png" alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+## Desktop/Mobile Preview
 
-<img src="./docs/images/preview_2.png" alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+<img src="./docs/images/youtamp-1.gif" weight=400 height=500 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+<img src="./docs/images/youtamp-mb.gif" height=500 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+
 
 <h3>A simple web application for YouTube timestamp creation.</h3>
 
@@ -43,13 +45,15 @@ cd youtamp
     ```bash
     uv run --env-file .env app.py --file index.html
     ```
-    >[!IMPORTANT] Make sure you have "GEMINI_API_KEY" set in your `.env` file or your environment variables
+    >[!IMPORTANT] 
+    > Make sure you have "GEMINI_API_KEY" set in your `.env` file or your environment variables
 2. **Open the browser:** http://127.0.0.1:5000/
 3. **In case you want to edit CSS files, run**
     ```bash
     npm run dev.build:css
     ``` 
-    > [!NOTE] it will run continuously while you edit CSS files
+    > [!NOTE] 
+    > it will run continuously while you edit CSS files
 
 ### How to edit frontend files (JavaScript/CSS/HTML)
 Frontend base on [DaisyUI](https://daisyui.com/) and [TailwindCSS](https://tailwindcss.com/) framework.
