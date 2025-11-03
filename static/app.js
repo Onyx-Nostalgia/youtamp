@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabLoading = document.querySelector(".tab-loading")
     const tabTimestamp = document.querySelector(".tab-timestamp")
     const timelineTab = document.getElementById('timeline-tab');
+    const stickyTabBar = document.getElementById('sticky-tab-bar')
     const commentTabContent = document.getElementById('comment-tab-content');
     const timestampDisplayContent = document.getElementById('timestamp-display-content');
 
@@ -221,6 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     appViewSection.classList.remove('opacity-0');
                 }, 50);
+
+                // Initialize the observer for the sticky tab bar now that the player is visible
+                initializeStickyTabBarObserver();
 
                 sendData('mock');
             });
@@ -635,34 +639,66 @@ document.addEventListener('DOMContentLoaded', () => {
 
     syncRadioGroups('display-tab', handleDisplayChange);
 
-    // Logic for the sticky tab bar
-    const stickyTabBar = document.getElementById('sticky-tab-bar');
+    let stickyBarObserverInitialized = false;
+    const initializeStickyTabBarObserver = () => {
+        if (stickyBarObserverInitialized || !timelineTab || !stickyTabBar) {
+            return;
+        }
+        stickyBarObserverInitialized = true;
 
-    if (timelineTab && stickyTabBar) {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                // Show sticky bar when the original tabs scroll out of view from the top
-                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
-                    stickyTabBar.classList.remove('hidden');
-                    stickyTabBar.classList.add('flex');
-                    youtubeVideoPlayer.classList.remove('rounded-xl');
-                    youtubeVideoPlayer.classList.add('rounded-tr-xl');
-                    youtubeVideoPlayer.classList.add('rounded-tl-xl');
-                } else {
-                    stickyTabBar.classList.add('hidden');
-                    stickyTabBar.classList.remove('flex');
-                    youtubeVideoPlayer.classList.add('rounded-xl');
-                    youtubeVideoPlayer.classList.remove('rounded-tr-xl');
-                    youtubeVideoPlayer.classList.remove('rounded-tl-xl');
-                }
-            },
-            {
-                root: null, // observing intersections relative to the viewport
-                threshold: 0, // callback is executed when the target is even 1px in or out of view
+        let observer;
+
+        const setupObserver = () => {
+            if (observer) {
+                observer.disconnect();
             }
-        );
 
-        observer.observe(timelineTab);
-    }
+            // Use a small timeout to ensure the DOM has updated and dimensions are available
+            setTimeout(() => {
+                const isSmallScreen = window.innerWidth < 1024; // Tailwind's lg breakpoint
+                let rootMarginTop = 0;
+
+                if (isSmallScreen) {
+                    const videoPlayerHeight = youtubeVideoPlayer.getBoundingClientRect().height;
+                    rootMarginTop = videoPlayerHeight;
+                }
+
+                observer = new IntersectionObserver(
+                    ([entry]) => {
+                        // Show sticky bar when the original tabs scroll out of the observation area from the top.
+                        // `entry.boundingClientRect.top < rootMarginTop` ensures we're scrolling up.
+                        // On large screens, rootMarginTop is 0, so it's < 0.
+                        // On small screens, it's < videoPlayerHeight, which is also correct.
+                        if (!entry.isIntersecting && entry.boundingClientRect.top < rootMarginTop) {
+                            stickyTabBar.classList.remove('hidden');
+                            stickyTabBar.classList.add('flex');
+                            youtubeVideoPlayer.classList.remove('rounded-xl');
+                            youtubeVideoPlayer.classList.add('rounded-tr-xl');
+                            youtubeVideoPlayer.classList.add('rounded-tl-xl');
+                        } else {
+                            stickyTabBar.classList.add('hidden');
+                            stickyTabBar.classList.remove('flex');
+                            youtubeVideoPlayer.classList.add('rounded-xl');
+                            youtubeVideoPlayer.classList.remove('rounded-tr-xl');
+                            youtubeVideoPlayer.classList.remove('rounded-tl-xl');
+                        }
+                    },
+                    {
+                        root: null, // observing intersections relative to the viewport
+                        rootMargin: `-${rootMarginTop}px 0px 0px 0px`,
+                        threshold: 0, // callback is executed when the target is even 1px in or out of view
+                    }
+                );
+
+                observer.observe(timelineTab);
+            }, 100); // Delay to allow rendering
+        };
+
+        // Initial setup
+        setupObserver();
+
+        // Re-setup on window resize to handle breakpoint changes and video player resize
+        window.addEventListener('resize', debounce(setupObserver, 200));
+    };
 
 });
