@@ -2,10 +2,10 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const heroSection = document.getElementById('hero-section');
+    const heroImage = document.getElementById('hero-image-container')
     const appViewSection = document.getElementById('app-view-section');
     const youtubeVideoPlayer = document.getElementById('youtube-video-player');
-    const copyBtn = document.getElementById('copy-timestamp-btn');
-    const timestampDisplayContent = document.getElementById('timestamp-display-content');
+    const copyButtons = document.querySelectorAll('.copy-timestamp-btn');
     const currentYearSpan = document.getElementById('current-year');
 
     const appViewInputSection = document.getElementById('app-view-input-section');
@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabLoading = document.querySelector(".tab-loading")
     const tabTimestamp = document.querySelector(".tab-timestamp")
     const timelineTab = document.getElementById('timeline-tab');
-    const commentTab = document.getElementById('comment-tab')
     const commentTabContent = document.getElementById('comment-tab-content');
+    const timestampDisplayContent = document.getElementById('timestamp-display-content');
 
     const toggleClassPair = (element, classOnTrue, classOnFalse, condition) => {
         element.classList.toggle(classOnTrue, condition);
@@ -49,6 +49,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    if (heroImage) {
+        heroImage.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+        });
+    }
 
     // Set current year in footer
     if (currentYearSpan) {
@@ -331,15 +336,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Return the HTML for the button
                 return `<button class="btn btn-xs btn-${mainColor} timestamp-link" data-time="${secondsValue}">${formattedTimestamp}</button>`;
             });
-            
+
             htmlContent += `
-                <li class="animate-appear motion-reduce:animate-none">
+                <li class="md:animate-appear motion-reduce:animate-none">
                     ${topHr}
                     <div class="timeline-middle">
-                        <div class="btn btn-${mainColor} btn-sm timestamp-link" data-time=${secondsValue}>${displayTimestamp}</div>
+                        <div class="btn btn-${mainColor} btn-sm timestamp-link shadow-md" data-time=${secondsValue}>${displayTimestamp}</div>
                     </div>
                     <div class="timeline-end timeline-box">
-                        <div class="timeline-description w-auto h-auto rounded-2xl wrap-break-word">${processedTextContent}</div>
+                        <div class="timeline-description w-auto h-auto wrap-break-word">${processedTextContent}</div>
                     </div>
                     ${bottomHr}
                 </li>
@@ -487,40 +492,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    if (timelineTab) {
-        timelineTab.addEventListener('click', () => {
-            const rawText = commentTabContent.value;
-            const timeline = convertToTimestamp(rawText)
-            timestampDisplayContent.innerHTML = timeline;
-            attachTimestampClickHandlers(); // Re-attach handlers after content update
-        })
+    const activateTimelineTab = () => {
+        const rawText = commentTabContent.value;
+        const timeline = convertToTimestamp(rawText)
+        timestampDisplayContent.innerHTML = timeline;
+        attachTimestampClickHandlers(); // Re-attach handlers after content update
+    };
+
+    const activateCommentTab = () => {
+        const timelineText = convertTimelineToText();
+        commentTabContent.value = timelineText;
+    };
+
+
+    function handleDisplayChange(selectedValue) {
+
+        switch (selectedValue) {
+            case 'timeline':
+                activateTimelineTab();
+                break;
+            case 'comment':
+                activateCommentTab();
+                break;
+        }
+
     }
 
-    if (commentTab) {
-        commentTab.addEventListener('click', () => {
-            const timelineText = convertTimelineToText();
-            commentTabContent.value = timelineText;
-        })
-    }
-
-    // Copy Timestamp Button
-    if (copyBtn) {
+    copyButtons.forEach(copyBtn => {
+        if (!copyBtn) {
+            console.error('ValueError: not found copy button.')
+            return;
+        }
         copyBtn.addEventListener('click', () => {
             let textToCopy;
-            const timelineRadio = timelineTab.querySelector('input[type="radio"]');
-            const commentRadio = commentTab.querySelector('input[type="radio"]');
-
-            if (timelineRadio.checked) {
-                // If timeline tab is active, convert its HTML content to plain text
-                textToCopy = convertTimelineToText();
-            } else if (commentRadio.checked) {
-                // If comment tab is active, use the text from commentTabContent (which is a textarea)
-                textToCopy = commentTabContent.value;
-            } else {
-                // Fallback or default if neither is checked (shouldn't happen if one is always checked)
-                textToCopy = ''; 
+            const selectedTab = tabTimestamp.querySelector('input[name="display_tab"]:checked');
+            if (!selectedTab) {
+                console.error("ValueError: not found selected tab.");
+                return;
             }
-
+            switch (selectedTab.value) {
+                case 'timeline':
+                    textToCopy = convertTimelineToText();
+                    break;
+                case 'comment':
+                    textToCopy = commentTabContent.value;
+                    break;
+                default:
+                    textToCopy = '';
+                    break;
+            }
             const button = copyBtn.querySelector(".btn")
             navigator.clipboard.writeText(textToCopy).then(() => {
                 button.innerHTML = `<span class="icon-[tabler--copy-check-filled] text-xl"></span>`;
@@ -541,7 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Failed to copy timestamps: ', err);
             });
         });
-    }
+
+    })
 
     // Smart Hide Navbar (Responsive)
     let lastScrollTop = 0;
@@ -565,5 +586,83 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         lastScrollTop = scrollTop;
     });
+
+    /**
+     * เชื่อมโยงสถานะการเลือก (checked) ของ Radio Buttons หลายกลุ่ม
+     * ที่ถูกระบุด้วย Class Name เดียวกัน ให้มีสถานะซิงค์กันเสมอ
+     * * @param {string} radioClassName - ชื่อคลาส (Class Name) ของปุ่ม Radio ทั้งหมดที่ต้องการซิงค์
+     * @param {function(string): void} [callback] - ฟังก์ชันเสริมที่จะถูกเรียกใช้เมื่อมีการเลือกใหม่ (ส่งค่า value ของปุ่มที่ถูกเลือกไปให้)
+     */
+    function syncRadioGroups(radioClassName, callback) {
+        // 1. เลือกปุ่ม Radio ทั้งหมดที่มี Class ตรงกัน
+        const allSyncRadios = document.querySelectorAll(`.${radioClassName}`);
+
+        if (allSyncRadios.length === 0) {
+            console.warn(`ไม่พบปุ่ม Radio ที่มีคลาส "${radioClassName}"`);
+            return;
+        }
+
+        // 2. วนลูปและเพิ่ม Event Listener ให้กับทุกปุ่ม
+        allSyncRadios.forEach(radio => {
+            radio.addEventListener('change', function (event) {
+
+                event.preventDefault();
+
+                // ก. ดึงค่า (Value) ที่ถูกเลือกใหม่
+                const newSelectedValue = event.target.value;
+
+                // ข. ค้นหาปุ่ม Radio ทั้งหมดในหน้าเว็บที่มีค่า Value เดียวกัน
+                const matchingRadios = document.querySelectorAll(`input[value="${newSelectedValue}"]`);
+
+                // ค. อัปเดตสถานะของปุ่มที่ตรงกันทั้งหมดให้เป็น checked
+                matchingRadios.forEach(matchRadio => {
+                    matchRadio.checked = true;
+                });
+
+                // ง. เรียกใช้ Callback Function (ถ้ามี) เพื่อให้สามารถนำค่าไปใช้ต่อได้
+                if (callback && typeof callback === 'function') {
+                    callback(newSelectedValue);
+                }
+            });
+        });
+
+        // 3. จัดการสถานะเริ่มต้นเมื่อโหลดหน้า
+        const initialChecked = document.querySelector(`.${radioClassName}:checked`);
+        if (initialChecked && callback && typeof callback === 'function') {
+            callback(initialChecked.value);
+        }
+    }
+
+    syncRadioGroups('display-tab', handleDisplayChange);
+
+    // Logic for the sticky tab bar
+    const stickyTabBar = document.getElementById('sticky-tab-bar');
+
+    if (timelineTab && stickyTabBar) {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                // Show sticky bar when the original tabs scroll out of view from the top
+                if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                    stickyTabBar.classList.remove('hidden');
+                    stickyTabBar.classList.add('flex');
+                    youtubeVideoPlayer.classList.remove('rounded-xl');
+                    youtubeVideoPlayer.classList.add('rounded-tr-xl');
+                    youtubeVideoPlayer.classList.add('rounded-tl-xl');
+                } else {
+                    stickyTabBar.classList.add('hidden');
+                    stickyTabBar.classList.remove('flex');
+                    youtubeVideoPlayer.classList.add('rounded-xl');
+                    youtubeVideoPlayer.classList.remove('rounded-tr-xl');
+                    youtubeVideoPlayer.classList.remove('rounded-tl-xl');
+                }
+            },
+            {
+                root: null, // observing intersections relative to the viewport
+                threshold: 0, // callback is executed when the target is even 1px in or out of view
+            }
+        );
+
+        observer.observe(timelineTab);
+    }
 
 });

@@ -91,19 +91,22 @@
         </header>
 
         <!-- ===== ส่วนที่ 2: Hero Section (Landing Page) ===== -->
-        <main class="z-10 relative flex-grow">
+        <main class="z-10 relative grow">
 
             <section id="hero-section" class="container mx-auto w-full px-4 py-4 md:py-6 relative h-full">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
 
                     <!-- คอลัมน์ซ้าย: Image Brand -->
-                    <div id="hero-image-container" class="flex justify-center transition-all duration-500 ease-in-out min-h-0">
-                        <img src="/static/images/mumu.png" alt="Youtamp"
-                            class="w-2/3 object-cover opacity-80 transform -scale-x-[1] shrink" loading="lazy">
+                    <div id="hero-image-container"
+                        class="flex justify-center transition-all duration-500 ease-in-out min-h-0">
+                        <img src="/static/images/mumu.png" alt="Youtamp" draggable="false"
+                            class="select-none w-2/3 object-cover opacity-80 transform -scale-x-[1] shrink"
+                            loading="lazy">
                     </div>
 
                     <!-- คอลัมน์ขวา: Title, Slogan, Input Section -->
-                    <div id="hero-content" class="text-center md:text-left transition-all duration-500 ease-in-out min-h-0">
+                    <div id="hero-content"
+                        class="text-center md:text-left transition-all duration-500 ease-in-out min-h-0">
                         <h1
                             class="text-4xl sm:text-6xl md:text-4xl lg:text-6xl font-bold text-base-content leading-tight mb-4">
                             สร้าง Timestamp YouTube
@@ -121,20 +124,49 @@
 
             <!-- ===== App View Section (Hidden by default, appears after generation) ===== -->
             <section id="app-view-section" class="hidden container mx-auto w-full px-2 py-2 md:py-4 relative">
-                <div id= "app-view-input-section" class="transition-transform duration-300 ease-in-out card bg-base-200 shadow-xl mb-8 p-4">
+                <div id="app-view-input-section"
+                    class="transition-transform duration-300 ease-in-out card bg-base-200 shadow-xl mb-8 p-4">
                     {% with section='appview' %}
                     {% include '_hero_input_section.html' %}
                     {% endwith %}
                 </div>
                 <div class="lg:flex lg:space-x-2 h-full">
                     <!-- คอลัมน์ซ้าย: Video Player -->
-                    <div class="animate-fade-right animate-once animate-ease-out lg:w-1/2 sticky top-1 h-fit z-30">
-                        <div class="skeleton bg-base-300 shadow-xl w-full aspect-video rounded-xl">
+                    <div class="animate-fade-right animate-once animate-ease-out lg:w-1/2 sticky top-1 h-fit z-30 mb-4">
+
+
+                        <!-- Video player -->
+                        <div class="opacity-20 skeleton bg-base-300 shadow-xl md:w-full aspect-video rounded-xl">
                             <iframe id="youtube-video-player" class="w-full h-full rounded-xl" src="about:blank"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen>
                             </iframe>
+                        </div>
+
+                        <!-- Sticky Tab Bar -->
+                        <div id="sticky-tab-bar"
+                            class="hidden animate-fade-down animate-duration-300 sticky top-0 h-fit z-30 bg-base-200 shadow-xl rounded-br-xl rounded-bl-xl p-1 sm:p-2 justify-between">
+
+                            <div class="tabs tabs-box tabs-xs sm:tabs-sm bg-base-300">
+                                <label class="tab [--tab-bg:var(--color-primary)]" id="sticky-timeline-btn">
+                                    <input type="radio" name="sticky_tab" value="timeline" class="peer display-tab" checked="checked" />
+                                    <span class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
+                                    Timeline
+                                </label>
+                                <label class="tab [--tab-bg:var(--color-secondary)]" id="sticky-comment-btn">
+                                    <input type="radio" name="sticky_tab" value="comment" class="peer display-tab" />
+                                    <span class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
+                                    Comment
+                                </label>
+
+                            </div>
+
+                            <div class="tooltip tooltip-left tooltip-info copy-timestamp-btn" data-tip="Copy">
+                                <button class="btn btn-circle btn-info text-xl">
+                                    <span class="icon-[tabler--copy]"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -171,7 +203,8 @@
                         <div class="tab-timestamp tabs tabs-lift hidden">
                             <label id="timeline-tab"
                                 class="tab  [--tab-bg:var(--color-primary)] [--tab-border-color:var(--color-primary)]">
-                                <input type="radio" name="my_tabs_4" checked="checked" class="peer" />
+                                <input type="radio" name="display_tab" value="timeline" checked="checked"
+                                    class="peer display-tab" />
                                 <span
                                     class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
                                 Timeline
@@ -184,7 +217,7 @@
 
                             <label id="comment-tab"
                                 class="tab [--tab-bg:var(--color-secondary)] [--tab-border-color:var(--color-secondary)]">
-                                <input type="radio" name="my_tabs_4" class="peer" />
+                                <input type="radio" name="display_tab" value="comment" class="peer display-tab" />
                                 <span
                                     class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
                                 Comment
@@ -195,7 +228,7 @@
                             </div>
 
                             <div class="ml-auto">
-                                <div id="copy-timestamp-btn" class="tooltip tooltip-left tooltip-info" data-tip="Copy">
+                                <div class="tooltip tooltip-left tooltip-info copy-timestamp-btn" data-tip="Copy">
                                     <button class="btn btn-circle btn-info text-xl">
                                         <span class="icon-[tabler--copy]"></span>
                                     </button>
