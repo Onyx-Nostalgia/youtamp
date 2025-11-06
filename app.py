@@ -28,6 +28,9 @@ def generate_timestamps() -> str | tuple[str, int]:
     if request.method == "POST":
         error = ""
         timestamps = ""
+        if app.config["MOCK"]:
+            timestamps = file_io.read_file(app.config["MOCK"])
+            return timestamps, 200
         try:
             data = request.get_json()
             url = data.get("url")
@@ -70,8 +73,15 @@ def main() -> None:
         default="index.html",
         help="The HTML file to render (e.g., 'index.html').",
     )
+    parser.add_argument(
+        "--mock",
+        type=str,
+        default=None,
+        help="Enable mock mode by providing a path to a mock file relative to the 'artifacts' directory (e.g., '4Jb35R2MZ_c/timestamps.txt').",
+    )
     args = parser.parse_args()
     app.config["HTML_FILE"] = args.file
+    app.config["MOCK"] = args.mock
     app.run(debug=True)
 
 

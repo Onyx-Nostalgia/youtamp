@@ -47,6 +47,7 @@ cd youtamp
     ```
     >[!IMPORTANT] 
     > Make sure you have "GEMINI_API_KEY" set in your `.env` file or your environment variables
+    
 2. **Open the browser:** http://127.0.0.1:5000/
 3. **In case you want to edit CSS files, run**
     ```bash
@@ -54,6 +55,20 @@ cd youtamp
     ``` 
     > [!NOTE] 
     > it will run continuously while you edit CSS files
+
+#### Mock Mode (for Testing)
+
+To test the frontend or bypass the Gemini API, you can run the server in "mock mode." This mode reads timestamp data directly from a local file instead of generating it.
+
+Use the `--mock` flag and provide a path to your mock data file. The path should be relative to the `artifacts` directory.
+
+**Example:**
+
+```bash
+uv run --env-file .env app.py --file index.html --mock 4Jb35R2MZ_c/timestamps.txt
+```
+
+This command will load timestamps from `artifacts/4Jb35R2MZ_c/timestamps.txt`.
 
 ### How to edit frontend files (JavaScript/CSS/HTML)
 Frontend base on [DaisyUI](https://daisyui.com/) and [TailwindCSS](https://tailwindcss.com/) framework.
