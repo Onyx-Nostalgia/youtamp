@@ -61,6 +61,35 @@ document.addEventListener('DOMContentLoaded', () => {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter') return;
+
+        // Determine which section is currently visible
+        const isHeroVisible = !heroSection.classList.contains('hidden');
+        const isAppViewVisible = !appViewSection.classList.contains('hidden');
+
+        let currentInputSection;
+        if (isHeroVisible) {
+            currentInputSection = heroSection.querySelector('[input-section]');
+        } else if (isAppViewVisible) {
+            currentInputSection = appViewSection.querySelector('[input-section]');
+        } else {
+            return; // No relevant section is visible
+        }
+
+        if (!currentInputSection) return;
+
+        const generateButton = currentInputSection.querySelector('[data-generate-button]');
+        const additionalDetailsTextarea = currentInputSection.querySelector('[data-additional-details]');
+
+        if (document.activeElement !== additionalDetailsTextarea && document.activeElement !== commentTabContent) {
+            e.preventDefault();
+            if (generateButton) {
+                generateButton.click();
+            }
+        }
+    });
+
 
     // URL Validation
     const validateUrl = (url) => {
@@ -144,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateInputState(urlInput, previewCard, true);
     };
 
-
     // Handle URL input and preview card for all input sections
     document.querySelectorAll('[input-section]').forEach(inputSection => {
         const youtubeUrlInput = inputSection.querySelector('[data-youtube-url-input]');
@@ -155,16 +183,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const languageSelect = inputSection.querySelector('[data-language-select]');
 
 
+
+
         if (youtubeUrlInput) {
             youtubeUrlInput.addEventListener('input', debounce(() => handleUrlChangeForSection(inputSection), 500)); // Debounce with 500ms delay
-            youtubeUrlInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault(); // Prevent form submission
-                    if (generateButton) {
-                        generateButton.click(); // Simulate click on generate button
-                    }
-                }
-            });
             // Initial check in case there's a pre-filled URL
             handleUrlChangeForSection(inputSection);
         }
