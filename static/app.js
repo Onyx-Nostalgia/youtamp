@@ -226,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Initialize the observer for the sticky tab bar now that the player is visible
                 initializeStickyTabBarObserver();
 
-                sendData('mock');
+                sendData();
             });
         }
     });
@@ -310,8 +310,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Use the modified convertSecondsToTimestamp function
             const displayTimestamp = convertSecondsToTimestamp(secondsValue, hasHHMMSS);
 
-            const isFirst = (index === 0);
-            const isLast = (index === totalItems - 1);
+            // const isFirst = (index === 0);
+            // const isLast = (index === totalItems - 1);
 
             const previousColor = index % 2 === 0
                 ? 'primary'
@@ -320,10 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? 'secondary'
                 : 'primary';
 
-            const delay = 50 + (index * 50);
-
-            const topHr = isFirst ? '' : `<hr class="bg-${previousColor}" />`;
-            const bottomHr = isLast ? '' : `<hr class="bg-${mainColor}" />`;
+            const topHr = index === 0 ? '' : `<hr class="bg-${previousColor}" />`;
+            const bottomHr = index === totalItems - 1 ? '' : `<hr class="bg-${mainColor}" />`;
 
             let processedTextContent = text_content.replace(/\n/g, '<br>'); // Replace newlines with <br> for HTML rendering
             const inlineTimestampRegex = /\b(\d{1,2}:\d{2}(:\d{2})?)\b/g; // Global flag for multiple matches
@@ -345,10 +343,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <li class="md:animate-appear motion-reduce:animate-none">
                     ${topHr}
                     <div class="timeline-middle">
-                        <div class="btn btn-${mainColor} btn-sm timestamp-link shadow-md" data-time=${secondsValue}>${displayTimestamp}</div>
+                        <div class="btn btn-${mainColor} btn-sm timestamp-link shadow-md text-base" data-time=${secondsValue}>${displayTimestamp}</div>
                     </div>
                     <div class="timeline-end timeline-box">
-                        <div class="timeline-description w-auto h-auto wrap-break-word">${processedTextContent}</div>
+                        <div class="timeline-description w-auto h-auto wrap-break-word text-base">${processedTextContent}</div>
                     </div>
                     ${bottomHr}
                 </li>
@@ -357,82 +355,49 @@ document.addEventListener('DOMContentLoaded', () => {
         return htmlContent;
     }
 
-
-    async function readMockData() {
-        // ... ส่วน fetch และการแยก lines ...
-        const url = '/static/timestamps.txt';
+    async function sendData() {
+        // Show loading state
+        tabLoading.classList.remove('hidden');
+        tabTimestamp.classList.add('hidden');
+        timestampDisplayContent.innerHTML = '<p>กำลังส่งข้อมูลจริงไปยัง Flask...</p>'; // Keep this for initial feedback
 
         try {
-            const response = await fetch(url);
-            if (!response.ok) { throw new Error(`ไม่พบไฟล์ Mock Data!`); }
+            const youtubeUrlInput = document.querySelector('[data-youtube-url-input]');
+            const additionalDetailsTextarea = document.querySelector('[data-additional-details]');
+            const languageSelect = document.querySelector('[data-language-select]');
 
-            const rawText = await response.text();
-
-            return {
-                status: "success",
-                message: rawText
+            const dataToSend = {
+                url: youtubeUrlInput ? youtubeUrlInput.value.trim() : '',
+                additional_instruction: additionalDetailsTextarea ? additionalDetailsTextarea.value : '',
+                language: languageSelect ? languageSelect.value : 'auto'
             };
 
-        } catch (error) {
-            console.error('Error reading mock data:', error);
-            return {
-                status: "error",
-                message: `Mock Data Load Failed: ${error.message}`
-            };
-        }
-    }
+            const response = await fetch('/api/timestamp/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dataToSend)
+            });
 
-    /**
- * @param {'live' | 'mock'} mode กำหนดว่าจะส่งไป Flask จริง หรือใช้ Mock Data
- */
-    async function sendData(mode) {
-        try {
-            let result;
-
-            if (mode === 'mock') {
-                // ใช้ข้อมูลจำลองจากไฟล์ .txt
-                timestampDisplayContent.innerHTML = '<p>กำลังโหลด Mock Data...</p>';
-                result = await readMockData();
-            } else {
-
-                timestampDisplayContent.innerHTML = '<p>กำลังส่งข้อมูลจริงไปยัง Flask...</p>';
-                const dataToSend = {
-                    url: youtubeUrlInput ? youtubeUrlInput.value.trim() : '',
-                    additional_instruction: additionalDetailsTextarea ? additionalDetailsTextarea.value : '',
-                    language: languageSelect ? languageSelect.value : 'auto'
-                };
-
-                const response = await fetch('/api/timestamp/generate', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dataToSend)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP Error! Status: ${response.status}`);
-                }
-                result = await response.json();
+            if (!response.ok) {
+                const errorText = await response.text(); // Get error message from backend
+                throw new Error(`HTTP Error! Status: ${response.status} - ${errorText}`);
             }
 
-            // 5. แสดงผลลัพธ์ (ไม่ว่าจะมาจาก Live หรือ Mock)
-            if (result.status === 'success') {
-                const htmlContent = convertToTimestamp(result.message);
-                commentTabContent.value = result.message
-                timestampDisplayContent.innerHTML = htmlContent;
+            const rawTimestamps = await response.text(); // Backend returns plain text
 
-                // Initial attachment of handlers
-                attachTimestampClickHandlers();
-                tabLoading.classList.add('hidden')
-                tabTimestamp.classList.remove("hidden")
-            } else {
-                timestampDisplayContent.innerHTML = `<p style="color: red;">❌ Error: ${result.message}</p>`;
-                tabLoading.classList.remove('hidden')
-                tabTimestamp.classList.add("hidden")
-            }
+            const htmlContent = convertToTimestamp(rawTimestamps);
+            commentTabContent.value = rawTimestamps; // Store raw text for comment tab
+            timestampDisplayContent.innerHTML = htmlContent;
+
+            attachTimestampClickHandlers();
+            tabLoading.classList.add('hidden');
+            tabTimestamp.classList.remove("hidden");
 
         } catch (error) {
-            timestampDisplayContent.innerHTML = `<p style="color: red;">เกิดข้อผิดพลาดในการทำงาน: ${error.message}</p>`;
+            timestampDisplayContent.innerHTML = `<p style="color: red;">❌ เกิดข้อผิดพลาดในการทำงาน: ${error.message}</p>`;
             console.error('Operation Error:', error);
+            tabLoading.classList.add('hidden'); // Hide loading on error
+            tabTimestamp.classList.add("hidden"); // Keep timestamp tab hidden on error
         }
     }
 
