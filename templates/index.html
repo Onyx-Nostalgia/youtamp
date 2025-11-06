@@ -28,19 +28,20 @@
         <header class=" z-20 w-full px-4 py-5 sm:px-8 md:px-12 navbar bg-base-100/80 shadow-lg">
             <nav class="container mx-auto flex items-center justify-between">
                 <!-- Logo -->
-                <button class="flex btn btn-ghost items-center space-x-1">
-                    <!-- Project Name + Mock Icon -->
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"
-                            fill="var(--color-accent)" />
-                        <path d="M10 17L10 7L16 10L10 17Z" fill="var(--color-neutral)" />
-                    </svg>
-                    <span class="text-xl font-bold">Youtamp</span>
-                </button>
+                <div class="flex items-center gap-2">
+                    <a href="#">
+                        <button class="flex btn btn-ghost items-center space-x-2">
+                            <img src="/static/images/logo-official.png" alt="Youtamp"
+                                class="w-10 h-10 rounded-full shadow-2xl">
+                            <span class="text-xl font-bold">Youtamp</span>
+                        </button>
+                    </a>
+                    <div class="badge badge-primary badge-soft text-xs">v1.0.0</div>
+                </div>
 
                 <!-- Theme and Language Toggles -->
                 <div class="flex items-center space-x-4">
+
                     <!-- Theme Toggle -->
                     <label class="swap btn swap-rotate btn-circle text-neutral">
                         <!-- this hidden checkbox controls the state -->
@@ -54,24 +55,41 @@
                     <!-- Language Toggle -->
                     <div class="dropdown dropdown-end">
                         <div tabindex="0" role="button"
-                            class="btn btn-ghost btn-circle gap-1 px-1.5 text-[.5625rem] font-bold text-neutral"
-                            aria-label="Language" title="Change Language">
+                            class="btn btn-ghost btn-circle gap-1 px-1.5 font-bold text-neutral" aria-label="Language"
+                            title="Change Language">
                             <span class="w-6 h-6 icon-[ic--baseline-language]"></span>
                         </div>
                         <div tabindex="0"
                             class="dropdown-content bg-base-200 text-base-content rounded-box top-px mt-16 w-50 overflow-y-auto border-(length:--border) border-white/5 shadow-xl outline-(length:--border) outline-black/5">
-                            <ul class="menu menu-sm w-full">
-                                <li><button class="menu-active">
-                                        <span
-                                            class="pe-4 icon-[emojione--flag-for-united-states] tracking-[0.09375rem] opacity-80"></span>
-                                        <span class="">English</span></button></li>
-                                <li><button>
-                                        <span
-                                            class="pe-4 icon-[emojione--flag-for-thailand] tracking-[0.09375rem] opacity-80"></span>
-                                        <span class="">ไทย</span></button></li>
+                            <ul class="menu menu-md w-full">
+                                <li class="left-0">
+                                    <input type="radio" name="lang-pick" id="en" class="peer hidden" />
+                                    <label for="en"
+                                        class="btn peer-checked:bg-neutral peer-checked:text-neutral-content justify-start">
+                                        <span class="pe-4 icon-[emojione--flag-for-united-states] tracking-[0.09375rem] opacity-80"></span>
+                                        <span class="">English</span>
+                                    </label>
+                                </li>
+                                <li>
+                                    <input type="radio" name="lang-pick" id="th" class="peer hidden" />
+                                    <label for="th"
+                                        class="btn peer-checked:bg-neutral peer-checked:text-neutral-content justify-start">
+                                        <span class="pe-4 icon-[emojione--flag-for-thailand] tracking-[0.09375rem] opacity-80"></span>
+                                        <span class="">ไทย</span>
+                                    </label>
+                                </li>
                             </ul>
                         </div>
                     </div>
+
+                    <!-- GitHub Star Badge -->
+                    <a href="https://github.com/Onyx-Nostalgia/youtamp" target="_blank" rel="noopener noreferrer"
+                        class="flex items-center space-x-2">
+                        <img src="https://img.shields.io/github/stars/onyx-nostalgia/youtamp" alt="GitHub stars"
+                            class="h-6">
+                    </a>
+
+
                 </div>
             </nav>
         </header>
@@ -79,14 +97,15 @@
         <!-- ===== ส่วนที่ 2: Hero Section (Landing Page) ===== -->
         <main class="z-10 relative grow">
 
-            <section id="hero-section" class="container mx-auto w-full px-4 py-4 md:py-6 relative h-full">
+            <section id="hero-section"
+                class="container mx-auto w-full px-4 2xl:px-28 py-4 md:py-6 relative h-full">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
 
                     <!-- คอลัมน์ซ้าย: Image Brand -->
                     <div id="hero-image-container"
                         class="flex justify-center transition-all duration-500 ease-in-out min-h-0">
                         <img src="/static/images/mumu.png" alt="Youtamp" draggable="false"
-                            class="select-none w-52 sm:w-2/3 object-cover opacity-80 transform -scale-x-[1] shrink"
+                            class="select-none w-52 sm:w-2/3 object-cover opacity-80 transform -scale-x-[1]"
                             loading="lazy">
                     </div>
 
@@ -118,11 +137,12 @@
                 </div>
                 <div class="lg:flex lg:space-x-2 h-full">
                     <!-- คอลัมน์ซ้าย: Video Player -->
-                    <div id="video-player-column" class="animate-fade-right animate-once animate-ease-out lg:w-1/2 sticky top-1 h-fit z-30 mb-4">
+                    <div id="video-player-column"
+                        class="animate-fade-right animate-once animate-ease-out w-full lg:w-1/2 sticky top-1 lg:top-1/4 h-fit z-30 mb-4">
 
 
                         <!-- Video player -->
-                        <div class="skeleton bg-base-300 shadow-xl md:w-full aspect-video rounded-xl">
+                        <div class="skeleton bg-base-300 shadow-xl aspect-video rounded-xl">
                             <iframe id="youtube-video-player" class="w-full h-full rounded-xl" src="about:blank"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -132,17 +152,20 @@
 
                         <!-- Sticky Tab Bar -->
                         <div id="sticky-tab-bar"
-                            class=" hidden animate-fade-down animate-duration-300 sticky top-0 h-fit z-30 bg-base-200 shadow-xl rounded-br-xl rounded-bl-xl p-1 sm:p-2 justify-between">
+                            class=" hidden animate-fade-down animate-duration-300 sticky top-0 h-fit z-30 bg-base-200 shadow-xl rounded-br-xl rounded-bl-xl p-1 sm:p-2 justify-between items-center">
 
-                            <div class="tabs tabs-box tabs-sm bg-base-300">
-                                <label class="tab [--tab-bg:var(--color-primary)]" id="sticky-timeline-btn">
-                                    <input type="radio" name="sticky_tab" value="timeline" class="peer display-tab" checked="checked" />
-                                    <span class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
+                            <div class="tabs tabs-box tabs-sm bg-base-300 shadow-2xl">
+                                <label class="tab [--tab-bg:var(--color-primary)] shadow-2xl" id="sticky-timeline-btn">
+                                    <input type="radio" name="sticky_tab" value="timeline" class="peer display-tab"
+                                        checked="checked" />
+                                    <span
+                                        class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
                                     Timeline
                                 </label>
-                                <label class="tab [--tab-bg:var(--color-secondary)]" id="sticky-comment-btn">
+                                <label class="tab [--tab-bg:var(--color-secondary)] shadow-2xl" id="sticky-comment-btn">
                                     <input type="radio" name="sticky_tab" value="comment" class="peer display-tab" />
-                                    <span class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
+                                    <span
+                                        class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
                                     Comment
                                 </label>
 
@@ -160,28 +183,31 @@
                     <div class="animate-fade-left animate-once animate-ease-out lg:w-1/2 flex flex-col">
 
                         <!-- skeleton tab loading -->
-                        <div class="tab-loading flex w-full h-full">
-                            <div class="flex mx-auto my-auto flex-col gap-4">
-                                <div class="flex items-center gap-4">
-                                    <div class="skeleton h-16 w-16 shrink-0 rounded-full"></div>
-                                    <div class="flex flex-col gap-4">
-                                        <div class="skeleton h-4 w-20"></div>
-                                        <div class="skeleton h-4 w-28"></div>
+                        <div class="tab-loading flex w-full h-full p-4">
+                            <div class="card bg-base-200/50 shadow-lg p-6 md:p-8 w-full">
+                                <div class="flex flex-col gap-6 animate-pulse">
+                                    <div class="flex items-center gap-4">
+                                        <div class="skeleton h-12 w-12 md:h-16 md:w-16 shrink-0 rounded-full"></div>
+                                        <div class="flex flex-col gap-4 w-full">
+                                            <div class="skeleton h-4 w-3/4"></div>
+                                            <div class="skeleton h-4 w-1/2"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <div class="skeleton h-16 w-16 shrink-0 rounded-full"></div>
-                                    <div class="flex flex-col gap-4">
-                                        <div class="skeleton h-4 w-20"></div>
-                                        <div class="skeleton h-4 w-28"></div>
+                                    <div class="flex items-center gap-4">
+                                        <div class="skeleton h-12 w-12 md:h-16 md:w-16 shrink-0 rounded-full"></div>
+                                        <div class="flex flex-col gap-4 w-full">
+                                            <div class="skeleton h-4 w-5/6"></div>
+                                            <div class="skeleton h-4 w-2/3"></div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center gap-4">
-                                    <div class="skeleton h-16 w-16 shrink-0 rounded-full"></div>
-                                    <div class="flex flex-col gap-4">
-                                        <div class="skeleton h-4 w-20"></div>
-                                        <div class="skeleton h-4 w-28"></div>
+                                    <div class="flex items-center gap-4">
+                                        <div class="skeleton h-12 w-12 md:h-16 md:w-16 shrink-0 rounded-full"></div>
+                                        <div class="flex flex-col gap-4 w-full">
+                                            <div class="skeleton h-4 w-3/4"></div>
+                                            <div class="skeleton h-4 w-1/2"></div>
+                                        </div>
                                     </div>
+                                    <div class="skeleton h-8 w-1/3 mx-auto mt-4"></div>
                                 </div>
                             </div>
                         </div>
@@ -209,7 +235,7 @@
                                 Comment
                             </label>
                             <div class=" tab-content bg-base-100 border-base-300 p-6">
-                                <textarea class="textarea w-full h-full border-0 rounded-xl textarea-ghost"
+                                <textarea class="textarea w-full h-full border-0 rounded-xl textarea-ghost text-base"
                                     style="field-sizing: content;" id="comment-tab-content"></textarea>
                             </div>
 
@@ -227,13 +253,93 @@
         </main>
 
         <!-- ===== ส่วนที่ 3: Footer ===== -->
-        <footer class="footer footer-center p-10 bg-neutral text-neutral-content">
-            <aside>
-                <p class="text-lg font-semibold mb-2">Youtamp</p>
-                <p class="opacity-70">
-                    &copy; <span id="current-year"></span> สงวนลิขสิทธิ์
-                </p>
-            </aside>
+        <footer class="footer z-20 px-2 py-4 bg-neutral/90 text-neutral-content mt-6 grid grid-cols-1 md:grid-cols-3">
+            <!-- Creator -->
+            <nav class="hidden md:block  md:place-self-center">
+
+                <a href="https://github.com/Onyx-Nostalgia" rel="noopener, noreferrer" target="_blank"
+                    class="inline-flex items-center justify-center hover:opacity-90">
+                    <div class="avatar me-3">
+                        <div class="mask mask-squircle bg-neutral h-14 w-14 p-px"><img loading="lazy" width="54"
+                                height="54" src="https://avatars.githubusercontent.com/u/79048971?v=4"
+                                alt="Onyx Nostalgia" class="mask mask-squircle"></div>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-neutral-content/70 text-xs">Created by</p>
+                        <p class="text-neutral-content font-title text-lg font-semibold">Onyx Nostalgia</p>
+                    </div>
+                </a>
+            </nav>
+
+            <!-- Logo, Copyright, Social -->
+            <div class="md:flex md:flex-col items-center md:place-self-center mx-auto justify-items-center-safe">
+                <a href="#">
+                    <img src="/static/images/logo-official.png" draggable="false" alt="Youtamp Logo"
+                        class="mask mask-circle bg-[#ece5f0] hidden md:inline-block md:size-20 max-h-20 max-w-20 p-1"></a>
+                <p class="text-center font-bold">Youtamp</p>
+                <p class="text-center">Copyright &copy; <span id="current-year"></span> - All right reserved</p>
+                <div class="flex gap-4 mt-4">
+                    <a href="https://github.com/Onyx-Nostalgia/youtamp" target="_blank" rel="noopener noreferrer"
+                        class="link link-hover">
+                        <div class="tooltip [--tt-bg:black]" data-tip="Github">
+                            <button
+                                class="btn btn-circle btn-ghost hover:bg-black hover:text-white hover:border-black hover:shadow-xl hover:scale-110 transition-all duration-300">
+                                <span class="w-6 h-6 icon-[line-md--github-loop]" loading="lazy"></span>
+                            </button>
+                        </div>
+                    </a>
+                    <a href="mailto:nostalgia.onyx@gmail.com" class="link link-hover">
+                        <div class="tooltip [--tt-bg:white] before:text-gray-800/80"
+                            data-tip="nostalgia.onyx@gmail.com">
+                            <button
+                                class="group btn btn-circle btn-ghost hover:bg-white hover:text-black hover:border-white hover:shadow-xl hover:scale-110 transition-all duration-300 ">
+                                <span class="group-hover:hidden w-6 h-6 icon-[line-md--email]" loading="lazy"></span>
+                                <span class="group-hover:block hidden w-6 h-6 icon-[logos--google-gmail]"
+                                    loading="lazy"></span>
+                            </button>
+                        </div>
+                    </a>
+                    <a href="https://www.youtube.com/@oreorobot2624" target="_blank" rel="noopener noreferrer"
+                        class="link link-hover">
+                        <div class="tooltip [--tt-bg:var(--color-red-500)]" data-tip="Youtube">
+                            <button
+                                class="btn btn-circle btn-ghost hover:bg-red-500 hover:text-white hover:border-red-500 hover:shadow-xl hover:scale-110 transition-all duration-300">
+                                <span class="w-6 h-6 icon-[line-md--youtube-filled]" loading="lazy"></span>
+                            </button>
+                        </div>
+                    </a>
+                    <a href="https://www.facebook.com/nostalgia.onyx" target="_blank" rel="noopener noreferrer"
+                        class="link link-hover">
+                        <div class="tooltip [--tt-bg:#1A77F2]" data-tip="Facebook">
+                            <button
+                                class="btn btn-circle btn-ghost hover:bg-[#1A77F2] hover:text-white hover:border-[#1A77F2] hover:shadow-xl hover:scale-110 transition-all duration-300">
+                                <span class="w-6 h-6 icon-[line-md--facebook]" loading="lazy"></span>
+                            </button>
+                        </div>
+                    </a>
+                    <a href="https://x.com/OnyxNostalgia" target="_blank" rel="noopener noreferrer"
+                        class="link link-hover">
+                        <div class="tooltip [--tt-bg:black]" data-tip="X">
+                            <button
+                                class="btn btn-circle btn-ghost hover:bg-black hover:text-white hover:border-black hover:shadow-xl hover:scale-110 transition-all duration-300">
+                                <span class="w-5 h-5 icon-[line-md--twitter-x] hover:animate-play"
+                                    loading="lazy"></span>
+                            </button>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- About & Legal -->
+            <nav class="hidden md:block md:place-self-center">
+                <h6 class="footer-title">About</h6>
+                <p class="max-w-xs">Youtamp เป็นโปรเจกต์โอเพนซอร์สที่สร้างขึ้นเพื่อช่วยให้คุณสร้าง Timestamp
+                    สำหรับวิดีโอ YouTube ได้อย่างรวดเร็วและง่ายดาย</p>
+                <h6 class="footer-title">Legal</h6>
+                <a href="https://github.com/Onyx-Nostalgia/youtamp/blob/master/LICENSE" target="_blank"
+                    rel="noopener noreferrer" class="link link-hover">MIT License</a>
+            </nav>
+
         </footer>
 
     </div>

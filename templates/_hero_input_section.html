@@ -1,6 +1,6 @@
 <!-- Input Section -->
 <div input-section>
-    <div class="relative w-full z-10">
+    <div class="relative z-10">
         <!-- URL Input -->
         <label class="input url-input input-primary input-lg w-full rounded-full pr-17 validator mb-4">
             <svg class="h-[2em] opacity-50 text-primary-content" xmlns="http://www.w3.org/2000/svg" width="24"
@@ -21,7 +21,7 @@
                 value="https://www.youtube.com/watch?v=4Jb35R2MZ_c"
                 placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
             <button
-                class="btn btn-primary btn-circle btn-xl hover:btn-secondary hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out"
+                class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out"
                 data-generate-button>
                 ✒️
             </button>
@@ -41,10 +41,10 @@
                 <img src="" alt="Thumbnail" data-video-thumbnail class="skeleton rounded-2xl" />
             </figure>
             <div class="card-body relative ml-0">
-                <div class="sm:card-title truncate max-w-xs sm:text-wrap sm:max-w-full" data-video-title>
+                <div class="sm:card-title truncate sm:text-wrap sm:max-w-full" data-video-title>
                     <div class="skeleton h-4 w-80"></div>
                 </div>
-                <div data-video-author class="truncate max-w-xs sm:text-wrap sm:max-w-full m-0">
+                <div data-video-author class="truncate text-base sm:text-wrap sm:max-w-full m-0">
                     <div class="skeleton h-4 w-80"></div>
                 </div>
                 <div class="card-actions absolute bottom-1 right-2">
@@ -69,13 +69,13 @@
         <div class="collapse-content space-y-4 peer-checked:bg-primary">
             <!-- Additional Details -->
             <fieldset class="fieldset" data-optional-input-content>
-                <legend class="fieldset-legend">รายละเอียดเพิ่มเติม</legend>
-                <textarea data-additional-details class="textarea textarea-primary w-full" rows="4"
+                <legend class="fieldset-legend text-sm">รายละเอียดเพิ่มเติม</legend>
+                <textarea data-additional-details class="textarea textarea-primary w-full text-sm" rows="4"
                     placeholder="เช่น อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก"></textarea>
             </fieldset>
             <!-- Language Selection -->
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">
+                <legend class="fieldset-legend text-sm">
                     ภาษาผลลัพธ์
                 </legend>
                 <select data-language-select class="select select-primary">

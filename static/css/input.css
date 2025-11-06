@@ -202,18 +202,18 @@ header {
 @keyframes appear {
     0%,100% {
         opacity: 0;
-        scale:1.2;
+        /* scale:1.2; */
         left: 0;
         /* transform: translateX(-100px); */
-        /* transform: translateY(-100px); */
+        transform: translateY(100px);
     }
 
-    15% ,75% {
+    15% ,85% {
         opacity: 1;
-        scale:1;
+        /* scale:1; */
         left: 0;
         /* transform: translateX(0); */
-        /* transform: translateY(0); */
+        transform: translateY(0);
     }
 }
 
