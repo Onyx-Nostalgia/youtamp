@@ -21,7 +21,7 @@
                 value="https://www.youtube.com/watch?v=4Jb35R2MZ_c"
                 placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
             <button
-                class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out"
+                class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out tooltip tooltip-left" data-tip="คลิกเพื่อสร้าง Timestamp จากวิดีโอ YouTube"
                 data-generate-button>
                 ✒️
             </button>
@@ -68,13 +68,13 @@
         </div>
         <div class="collapse-content space-y-4 peer-checked:bg-primary">
             <!-- Additional Details -->
-            <fieldset class="fieldset" data-optional-input-content>
+            <fieldset class="fieldset tooltip tooltip-bottom" data-tip="เพิ่มคำแนะนำพิเศษสำหรับ AI เช่น 'อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก'">
                 <legend class="fieldset-legend text-sm">รายละเอียดเพิ่มเติม</legend>
                 <textarea data-additional-details class="textarea textarea-primary w-full text-sm" rows="4"
                     placeholder="เช่น อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก"></textarea>
             </fieldset>
             <!-- Language Selection -->
-            <fieldset class="fieldset">
+            <fieldset class="fieldset tooltip tooltip-bottom" data-tip="เลือกภาษาสำหรับ Timestamp ที่จะสร้าง">
                 <legend class="fieldset-legend text-sm">
                     ภาษาผลลัพธ์
                 </legend>
