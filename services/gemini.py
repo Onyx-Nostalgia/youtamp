@@ -23,6 +23,7 @@ You are given a YouTube video transcript with timestamps. Your task is to extrac
     - If the video is less than 1 hour, use MM:SS format.
     - If the video is 1 hour or longer, use HH:MM:SS format
 - Write just 1 to 5 words describing what's happening
+- The number of characters must not exceed 1000 characters (based on YouTube's comment character limit).
 
 * ✅ I want only the timestamps and labels, nothing else.
 * ✅ I want to use Thai, but if there are words that can be transliterated into English (such as sponsor, member, project), use the English word.
