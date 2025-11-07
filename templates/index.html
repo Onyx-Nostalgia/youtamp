@@ -29,7 +29,7 @@
             <nav class="container mx-auto flex items-center justify-between">
                 <!-- Logo -->
                 <div class="flex items-center gap-2">
-                    <a href="#">
+                    <a href="#" id="home-button">
                         <button class="flex btn btn-ghost items-center space-x-2 tooltip tooltip-bottom"
                             data-tip-i18n-key="logo_tooltip">
                             <img src="/static/images/logo-official.png" alt="Youtamp"
@@ -131,7 +131,7 @@
             </section>
 
             <!-- ===== App View Section (Hidden by default, appears after generation) ===== -->
-            <section id="app-view-section" class="hidden container mx-auto w-full px-2 py-2 md:py-4 relative">
+            <section id="app-view-section" class="container mx-auto w-full px-2 py-2 md:py-4 relative">
                 <div id="app-view-input-section"
                     class=" transition-transform duration-300 ease-in-out card bg-base-100 shadow-xl mb-8 p-4">
                     {% with section='appview' %}
@@ -283,7 +283,7 @@
 
             <!-- Logo, Copyright, Social -->
             <div class="md:flex md:flex-col items-center md:place-self-center mx-auto justify-items-center-safe">
-                <a href="#" class="tooltip tooltip-top" data-tip-i18n-key="footer_logo_tooltip">
+                <a href="#" id="footer-home-button" class="tooltip tooltip-top" data-tip-i18n-key="footer_logo_tooltip">
                     <img src="/static/images/logo-official.png" draggable="false" alt="Youtamp Logo"
                         class="mask mask-circle bg-[#ece5f0] hidden md:inline-block md:size-20 max-h-20 max-w-20 p-1"></a>
                 <p class="text-center font-bold" data-i18n-key="footer_brand">Youtamp</p>
@@ -354,7 +354,7 @@
 
     </div>
 
-    <script src="/static/app.js"></script>
+    <script src="/static/js/app.js" type="module"></script>
 </body>
 
 </html>
