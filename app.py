@@ -24,33 +24,32 @@ def index() -> str:
 
 
 @app.route("/api/timestamp/generate", methods=["POST"])
-def generate_timestamps() -> str | tuple[str, int]:
+async def generate_timestamps() -> str | tuple[str, int]:
     if request.method == "POST":
         error = ""
         timestamps = ""
         if app.config["MOCK"]:
-            timestamps = file_io.read_file(app.config["MOCK"])
+            timestamps = await file_io.async_read_file(app.config["MOCK"])
             return timestamps, 200
         try:
             data = request.get_json()
             url = data.get("url")
             additional_instruction = data.get("additional_instruction", "")
             language = data.get("language", "auto")
-            
+
             video_id = youtube.extract_video_id(url)
             language = format_language(language)
 
-            # Default to Thai, can be parameterized later if needed
-            captions_list = youtube.get_transcript_lines(video_id, language)
+            captions_list = await youtube.async_get_transcript_lines(video_id, language)
             captions = "\n".join(captions_list)
 
-            raw_output = gemini.evaluate_timestamps(
+            raw_output = await gemini.async_evaluate_timestamps(
                 captions,
                 additional_instruction,
                 video_id,
             )
 
-            file_io.save_timestamps_to_file(raw_output, video_id)
+            await file_io.async_save_timestamps_to_file(raw_output, video_id)
 
             timestamps = format_timestamps(raw_output)
 

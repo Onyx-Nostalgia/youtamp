@@ -1,6 +1,8 @@
+import asyncio
 import datetime
 import re
 
+import httpx
 from youtube_transcript_api import YouTubeTranscriptApi
 
 
@@ -25,3 +27,22 @@ def get_transcript_lines(video_id: str, languages: list[str] | None = None) -> l
     return [
         f"{format_time(entry.start)} - {entry.text.replace('\n', ' ')}" for entry in transcript
     ]
+
+
+async def async_get_transcript_lines(
+    video_id: str,
+    languages: list[str] | None = None,
+) -> list[str]:
+    if languages is None:
+        languages = ["th"]
+
+    def _fetch():
+        with httpx.Client() as client:
+            api = YouTubeTranscriptApi(http_client=client)
+            transcript = api.get_transcript(video_id, languages=languages)
+            return [
+                f"{format_time(entry['start'])} - {entry['text'].replace('\n', ' ')}"
+                for entry in transcript
+            ]
+
+    return await asyncio.to_thread(_fetch)

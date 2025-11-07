@@ -45,6 +45,46 @@ Example MM:SS format output:
 """
 
 
+async def async_generate_prompt(
+    captions: str,
+    additional_instructions: str,
+    video_id: str,
+) -> str:
+    transcript = f"""
+    Here is the transcript:
+    {captions}
+    """
+
+    prompt_from_file = await file_io.async_load_prompt_from_file(video_id)
+    if prompt_from_file:
+        return prompt_from_file
+
+    return additional_instructions + transcript
+
+
+async def async_evaluate_timestamps(
+    captions: str,
+    additional_instructions: str = "",
+    video_id: str = "",
+) -> list[str]:
+    prompt = await async_generate_prompt(captions, additional_instructions, video_id)
+    await file_io.async_save_prompt_to_file(prompt, video_id)
+
+    model = genai.GenerativeModel(
+        model_name="gemini-1.5-flash",
+        generation_config=generation_config,
+        system_instruction=system_instruction,
+    )
+
+    response = await model.generate_content_async(prompt)
+    await file_io.async_save_response_to_file(response.text, video_id)
+
+    my_timestamps: list[Timestamp] = response.parsed
+
+    output = [f"{ts.timestamp} {ts.label}" for ts in my_timestamps]
+    return output
+
+
 def generate_prompt(
     captions: str,
     additional_instructions: str,
