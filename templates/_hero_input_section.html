@@ -22,7 +22,7 @@
                 placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
             <button
                 class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out tooltip tooltip-left"
-                data-tip="สร้าง Timestamp" data-generate-button>
+                data-tip-i18n-key="generate_button_tooltip" data-generate-button>
                 ✒️
             </button>
 
@@ -63,27 +63,26 @@
     <div class="collapse collapse-arrow">
         <input type="checkbox" class="peer" />
         <div
-            class="collapse-title peer-checked:bg-primary peer-checked:text-primary-content after:start-5 after:end-auto pe-4 ps-12">
-            ตัวเลือกเพิ่มเติม
+            class="collapse-title peer-checked:bg-primary peer-checked:text-primary-content after:start-5 after:end-auto pe-4 ps-12" data-i18n-key="additional_options">
         </div>
         <div class="collapse-content space-y-4 peer-checked:bg-primary">
             <!-- Additional Details -->
             <fieldset class="fieldset">
-                <legend class="fieldset-legend text-sm">รายละเอียดเพิ่มเติม<div class="tooltip tooltip-bottom tooltip-xs lg:tooltip-right tooltip-info" data-tip="เพิ่มคำแนะนำพิเศษสำหรับ AI เพื่อ timestamp ที่ตรงใจมากขึ้น">
+                <legend class="fieldset-legend text-sm"><span data-i18n-key="additional_details_legend"></span><div class="tooltip tooltip-bottom tooltip-xs lg:tooltip-right tooltip-info" data-tip-i18n-key="additional_details_tooltip">
                         <span class="text-neutral icon-[icon-park-twotone--info]"></span></div></legend>
                 <textarea data-additional-details class="textarea textarea-primary w-full text-sm" rows="4"
-                    placeholder="เช่น อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก"></textarea>
+                    placeholder-i18n-key="additional_details_placeholder"></textarea>
             </fieldset>
             <!-- Language Selection -->
             <fieldset class="fieldset">
                 <legend class="fieldset-legend text-sm">
-                    ภาษาผลลัพธ์<div class="tooltip tooltip-xs tooltip-bottom lg:tooltip-right tooltip-info" data-tip="ภาษาผลลัพธ์ของ timestamp">
+                    <span data-i18n-key="language_select_legend"></span><div class="tooltip tooltip-xs tooltip-bottom lg:tooltip-right tooltip-info" data-tip-i18n-key="language_select_tooltip">
                         <span class="text-neutral icon-[icon-park-twotone--info]"></span></div>
                 </legend>
                 <select data-language-select class="select select-primary">
-                    <option value="auto">ตามภาษาของวิดีโอ (Default)</option>
-                    <option value="th">ไทย (TH)</option>
-                    <option value="en">อังกฤษ (EN)</option>
+                    <option value="auto" data-i18n-key="lang_auto"></option>
+                    <option value="th" data-i18n-key="lang_th_option"></option>
+                    <option value="en" data-i18n-key="lang_en_option"></option>
                 </select>
             </fieldset>
         </div>

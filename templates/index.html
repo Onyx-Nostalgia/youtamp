@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Youtamp</title>
+    <title data-i18n-key="doc_title">Youtamp</title>
     <link href="./static/dist/output.css" rel="stylesheet">
     <!-- Font Import -->
     <style>
@@ -31,14 +31,14 @@
                 <div class="flex items-center gap-2">
                     <a href="#">
                         <button class="flex btn btn-ghost items-center space-x-2 tooltip tooltip-bottom"
-                            data-tip="Home">
+                            data-tip-i18n-key="logo_tooltip">
                             <img src="/static/images/logo-official.png" alt="Youtamp"
                                 class="w-10 h-10 rounded-full shadow-2xl">
-                            <span class="text-xl font-bold">Youtamp</span>
+                            <span class="text-xl font-bold" data-i18n-key="logo_text">Youtamp</span>
                         </button>
                     </a>
                     <div class="badge badge-neutral badge-soft text-sm tooltip tooltip-bottom"
-                        data-tip="เริ่มต้นอย่างสดใส">v1.0.0</div>
+                        data-tip-i18n-key="version_badge_tooltip" data-i18n-key="version_badge">v1.0.0</div>
                 </div>
 
                 <!-- Theme and Language Toggles -->
@@ -46,7 +46,7 @@
 
                     <!-- Theme Toggle -->
                     <label class="swap btn swap-rotate btn-circle text-neutral tooltip tooltip-bottom"
-                        data-tip="สลับธีม">
+                        data-tip-i18n-key="theme_toggle_tooltip">
                         <!-- this hidden checkbox controls the state -->
                         <input type="checkbox" class="theme-controller" value="bumblebee-dark" />
                         <span
@@ -59,7 +59,7 @@
                     <div class="dropdown dropdown-end">
                         <div tabindex="0" role="button"
                             class="btn btn-circle gap-1 px-1.5 font-bold text-neutral tooltip tooltip-bottom"
-                            data-tip="เปลี่ยนภาษา" aria-label="Language" title="Change Language">
+                            data-tip-i18n-key="language_toggle_tooltip" aria-label="Language" title="Change Language">
                             <span class="w-6 h-6 icon-[ic--baseline-language]"></span>
                         </div>
                         <div tabindex="0"
@@ -71,7 +71,7 @@
                                         class="btn peer-checked:bg-neutral peer-checked:text-neutral-content justify-start">
                                         <span
                                             class="pe-4 icon-[emojione--flag-for-united-states] tracking-[0.09375rem] opacity-80"></span>
-                                        <span class="">English</span>
+                                        <span data-i18n-key="lang_en">English</span>
                                     </label>
                                 </li>
                                 <li>
@@ -80,7 +80,7 @@
                                         class="btn peer-checked:bg-neutral peer-checked:text-neutral-content justify-start">
                                         <span
                                             class="pe-4 icon-[emojione--flag-for-thailand] tracking-[0.09375rem] opacity-80"></span>
-                                        <span class="">ไทย</span>
+                                        <span data-i18n-key="lang_th">ไทย</span>
                                     </label>
                                 </li>
                             </ul>
@@ -89,7 +89,7 @@
 
                     <!-- GitHub Star Badge -->
                     <a href="https://github.com/Onyx-Nostalgia/youtamp" target="_blank" rel="noopener noreferrer"
-                        class="flex items-center space-x-2 tooltip tooltip-bottom" data-tip="ให้ดาว Project บน GitHub">
+                        class="flex items-center space-x-2 tooltip tooltip-bottom" data-tip-i18n-key="github_star_tooltip">
                         <img src="https://img.shields.io/github/stars/onyx-nostalgia/youtamp" alt="GitHub stars"
                             class="h-6">
                     </a>
@@ -118,11 +118,10 @@
                         class="text-center md:text-left transition-all duration-500 ease-in-out min-h-0">
                         <h1
                             class="text-4xl sm:text-6xl md:text-4xl lg:text-6xl font-bold text-base-content leading-tight mb-4">
-                            สร้าง Timestamp YouTube
-                            <span class="text-primary">อย่างง่ายดาย</span>
+                            <span data-i18n-key="hero_title_1"></span>
+                            <span class="text-primary" data-i18n-key="hero_title_2"></span>
                         </h1>
-                        <p class="text-lg text-base-content opacity-80 mb-8">
-                            แปลงวิดีโอ YouTube ให้เป็น Timestamp ที่จัดระเบียบ พร้อมสำหรับการแบ่งปัน
+                        <p class="text-lg text-base-content opacity-80 mb-8" data-i18n-key="hero_subtitle">
                         </p>
 
                         {% include '_hero_input_section.html' %}
@@ -160,26 +159,26 @@
 
                             <div class="tabs tabs-box tabs-sm bg-base-300">
                                 <label class="tab [--tab-bg:var(--color-primary)] tooltip tooltip-bottom"
-                                    data-tip="แสดงในรูปแบบ Timeline พร้อมปุ่มเวลาสำหรับแสดงวิดิโอช่วงเวลานั้น ๆ"
+                                    data-tip-i18n-key="sticky_timeline_tooltip"
                                     id="sticky-timeline-btn">
                                     <input type="radio" name="sticky_tab" value="timeline" class="peer display-tab"
                                         checked="checked" />
                                     <span
                                         class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
-                                    Timeline
+                                    <span data-i18n-key="timeline_button"></span>
                                 </label>
                                 <label class="tab [--tab-bg:var(--color-secondary)] tooltip tooltip-bottom"
-                                    data-tip="แสดงในรูปแบบ Comment พร้อมสำหรับการแก้ไขและนำไปใช้งาน"
+                                    data-tip-i18n-key="sticky_comment_tooltip"
                                     id="sticky-comment-btn">
                                     <input type="radio" name="sticky_tab" value="comment" class="peer display-tab" />
                                     <span
                                         class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
-                                    Comment
+                                    <span data-i18n-key="comment_button"></span>
                                 </label>
 
                             </div>
 
-                            <div class="tooltip tooltip-left tooltip-info copy-timestamp-btn" data-tip="Copy">
+                            <div class="tooltip tooltip-left tooltip-info copy-timestamp-btn" data-tip-i18n-key="copy_tooltip">
                                 <button class="btn btn-circle btn-info text-xl">
                                     <span class="icon-[tabler--copy]"></span>
                                 </button>
@@ -223,12 +222,12 @@
                         <div class="tab-timestamp tabs tabs-lift hidden">
                             <label id="timeline-tab"
                                 class="tab  [--tab-bg:var(--color-primary)] [--tab-border-color:var(--color-primary)] shadow-2xl tooltip tooltip-right has-checked:before:hidden has-checked:after:hidden"
-                                data-tip="แสดงในรูปแบบ Timeline พร้อมปุ่มเวลาสำหรับแสดงวิดิโอช่วงเวลานั้น ๆ">
+                                data-tip-i18n-key="timeline_tab_tooltip">
                                 <input type="radio" name="display_tab" value="timeline" checked="checked"
                                     class="peer display-tab" />
                                 <span
                                     class="not-checked:icon-[mdi--timeline-clock-outline] peer-checked:icon-[mdi--timeline-clock] text-xl mr-2 peer-checked:text-primary-content"></span>
-                                Timeline
+                                <span data-i18n-key="timeline_button"></span>
                             </label>
                             <div class=" tab-content bg-base-100 border-base-300 p-6 shadow-2xl">
                                 <div class="text-base-content wrap-break-word">
@@ -238,11 +237,11 @@
 
                             <label id="comment-tab"
                                 class="tab [--tab-bg:var(--color-secondary)] [--tab-border-color:var(--color-secondary)] shadow-2xl tooltip tooltip-right has-checked:before:hidden has-checked:after:hidden"
-                                data-tip="แสดงในรูปแบบ Comment พร้อมสำหรับการแก้ไขและนำไปใช้งาน">
+                                data-tip-i18n-key="comment_tab_tooltip">
                                 <input type="radio" name="display_tab" value="comment" class="peer display-tab" />
                                 <span
                                     class="not-checked:icon-[ic--outline-comment] peer-checked:icon-[ic--baseline-comment] text-xl peer-checked:text-secondary-content mr-2"></span>
-                                Comment
+                                <span data-i18n-key="comment_button"></span>
                             </label>
                             <div class=" tab-content bg-base-100 border-base-300 p-6 shadow-2xl">
                                 <textarea class="textarea w-full h-full border-0 rounded-xl textarea-ghost text-base"
@@ -250,7 +249,7 @@
                             </div>
 
                             <div class="ml-auto">
-                                <div class="tooltip tooltip-left tooltip-info copy-timestamp-btn" data-tip="Copy">
+                                <div class="tooltip tooltip-left tooltip-info copy-timestamp-btn" data-tip-i18n-key="copy_tooltip">
                                     <button class="btn btn-circle btn-info text-xl">
                                         <span class="icon-[tabler--copy]"></span>
                                     </button>
@@ -269,30 +268,30 @@
 
                 <a href="https://github.com/Onyx-Nostalgia" rel="noopener, noreferrer" target="_blank"
                     class="inline-flex items-center justify-center hover:opacity-90 tooltip tooltip-top"
-                    data-tip="เยี่ยมชมโปรไฟล์ GitHub ของผู้สร้าง">
+                    data-tip-i18n-key="creator_tooltip">
                     <div class="avatar me-3">
                         <div class="mask mask-squircle bg-neutral h-14 w-14 p-px"><img loading="lazy" width="54"
                                 height="54" src="https://avatars.githubusercontent.com/u/79048971?v=4"
                                 alt="Onyx Nostalgia" class="mask mask-squircle"></div>
                     </div>
                     <div class="text-left">
-                        <p class="text-neutral-content/70 text-xs">Created by</p>
-                        <p class="text-neutral-content font-title text-lg font-semibold">Onyx Nostalgia</p>
+                        <p class="text-neutral-content/70 text-xs" data-i18n-key="created_by">Created by</p>
+                        <p class="text-neutral-content font-title text-lg font-semibold" data-i18n-key="creator_name">Onyx Nostalgia</p>
                     </div>
                 </a>
             </nav>
 
             <!-- Logo, Copyright, Social -->
             <div class="md:flex md:flex-col items-center md:place-self-center mx-auto justify-items-center-safe">
-                <a href="#" class="tooltip tooltip-top" data-tip="Home">
+                <a href="#" class="tooltip tooltip-top" data-tip-i18n-key="footer_logo_tooltip">
                     <img src="/static/images/logo-official.png" draggable="false" alt="Youtamp Logo"
                         class="mask mask-circle bg-[#ece5f0] hidden md:inline-block md:size-20 max-h-20 max-w-20 p-1"></a>
-                <p class="text-center font-bold">Youtamp</p>
-                <p class="text-center">Copyright &copy; <span id="current-year"></span> - All right reserved</p>
+                <p class="text-center font-bold" data-i18n-key="footer_brand">Youtamp</p>
+                <p class="text-center" data-i18n-key="footer_copyright">Copyright &copy; <span id="current-year"></span> - All right reserved</p>
                 <div class="flex gap-4 mt-4">
                     <a href="https://github.com/Onyx-Nostalgia/youtamp" target="_blank" rel="noopener noreferrer"
                         class="link link-hover">
-                        <div class="tooltip [--tt-bg:black]" data-tip="Github">
+                        <div class="tooltip [--tt-bg:black]" data-tip-i18n-key="github_tooltip">
                             <button
                                 class="btn btn-circle btn-ghost hover:bg-black hover:text-white hover:border-black hover:shadow-xl hover:scale-110 transition-all duration-300">
                                 <span class="w-6 h-6 icon-[line-md--github-loop]" loading="lazy"></span>
@@ -301,7 +300,7 @@
                     </a>
                     <a href="mailto:nostalgia.onyx@gmail.com" class="link link-hover">
                         <div class="tooltip [--tt-bg:white] before:text-gray-800/80"
-                            data-tip="nostalgia.onyx@gmail.com">
+                            data-tip-i18n-key="email_tooltip">
                             <button
                                 class="group btn btn-circle btn-ghost hover:bg-white hover:text-black hover:border-white hover:shadow-xl hover:scale-110 transition-all duration-300 ">
                                 <span class="group-hover:hidden w-6 h-6 icon-[line-md--email]" loading="lazy"></span>
@@ -312,7 +311,7 @@
                     </a>
                     <a href="https://www.youtube.com/@oreorobot2624" target="_blank" rel="noopener noreferrer"
                         class="link link-hover">
-                        <div class="tooltip [--tt-bg:var(--color-red-500)]" data-tip="Youtube">
+                        <div class="tooltip [--tt-bg:var(--color-red-500)]" data-tip-i18n-key="youtube_tooltip">
                             <button
                                 class="btn btn-circle btn-ghost hover:bg-red-500 hover:text-white hover:border-red-500 hover:shadow-xl hover:scale-110 transition-all duration-300">
                                 <span class="w-6 h-6 icon-[line-md--youtube-filled]" loading="lazy"></span>
@@ -321,7 +320,7 @@
                     </a>
                     <a href="https://www.facebook.com/nostalgia.onyx" target="_blank" rel="noopener noreferrer"
                         class="link link-hover">
-                        <div class="tooltip [--tt-bg:#1A77F2]" data-tip="Facebook">
+                        <div class="tooltip [--tt-bg:#1A77F2]" data-tip-i18n-key="facebook_tooltip">
                             <button
                                 class="btn btn-circle btn-ghost hover:bg-[#1A77F2] hover:text-white hover:border-[#1A77F2] hover:shadow-xl hover:scale-110 transition-all duration-300">
                                 <span class="w-6 h-6 icon-[line-md--facebook]" loading="lazy"></span>
@@ -330,7 +329,7 @@
                     </a>
                     <a href="https://x.com/OnyxNostalgia" target="_blank" rel="noopener noreferrer"
                         class="link link-hover">
-                        <div class="tooltip [--tt-bg:black]" data-tip="X">
+                        <div class="tooltip [--tt-bg:black]" data-tip-i18n-key="x_tooltip">
                             <button
                                 class="btn btn-circle btn-ghost hover:bg-black hover:text-white hover:border-black hover:shadow-xl hover:scale-110 transition-all duration-300">
                                 <span class="w-5 h-5 icon-[line-md--twitter-x] hover:animate-play"
@@ -343,13 +342,12 @@
 
             <!-- About & Legal -->
             <nav class="hidden md:block md:place-self-center">
-                <h6 class="footer-title">About</h6>
-                <p class="max-w-xs">Youtamp เป็นโปรเจกต์โอเพนซอร์สที่สร้างขึ้นเพื่อช่วยให้คุณสร้างและแก้ไข Timestamp
-                    สำหรับวิดีโอ YouTube ได้อย่างรวดเร็วและง่ายดาย</p>
-                <h6 class="footer-title">Legal</h6>
+                <h6 class="footer-title" data-i18n-key="about_title">About</h6>
+                <p class="max-w-xs" data-i18n-key="about_text"></p>
+                <h6 class="footer-title" data-i18n-key="legal_title">Legal</h6>
                 <a href="https://github.com/Onyx-Nostalgia/youtamp/blob/master/LICENSE" target="_blank"
                     rel="noopener noreferrer" class="link link-hover tooltip tooltip-top"
-                    data-tip="ดูรายละเอียดใบอนุญาต MIT">MIT License</a>
+                    data-tip-i18n-key="license_tooltip" data-i18n-key="license_link">MIT License</a>
             </nav>
 
         </footer>
