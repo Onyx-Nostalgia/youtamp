@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n-key="doc_title">Youtamp</title>
+    <link rel="icon" href="./static/images/logo-official.png" type="image/png">
     <link href="./static/dist/output.css" rel="stylesheet">
+    <link href="./static/css/bg.css" rel="stylesheet">
     <!-- Font Import -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai+Looped:wght@100..900&display=swap');
@@ -16,8 +18,10 @@
 <body class="font-sans">
 
     <!-- Container หลักของแอป -->
-    <div class="relative min-h-screen flex flex-col bg-(image:--body-bg-image) bg-cover bg-center bg-no-repeat overflow-x-hidden">
-
+    <div class="relative min-h-screen flex flex-col bg-(image:--body-bg-image) bg-fixed bg-cover bg-center bg-no-repeat">
+        <div class="absolute text-base-content">
+            {% include 'bg.html' %}
+        </div>
         <!-- blob background -->
         <div class="z-10 fixed w-full h-full overflow-hidden pointer-events-none">
             <div class="animated-blob-secondary h-[300px] w-[300px] md:h-[600px] md:w-[600px] top-10 left-40"></div>
@@ -133,7 +137,7 @@
             <!-- ===== App View Section (Hidden by default, appears after generation) ===== -->
             <section id="app-view-section" class="container mx-auto w-full px-2 py-2 lg:py-4 relative">
                 <div id="app-view-input-section"
-                    class=" transition-transform duration-300 ease-in-out card bg-base-100 shadow-xl mb-8 p-4">
+                    class=" transition-transform duration-300 ease-in-out card bg-base-100 shadow-xl mb-8 p-4 animate-fade-down">
                     {% with section='appview' %}
                     {% include '_hero_input_section.html' %}
                     {% endwith %}
@@ -141,7 +145,7 @@
                 <div class="lg:flex lg:space-x-2 h-full">
                     <!-- คอลัมน์ซ้าย: Video Player -->
                     <div id="video-player-column"
-                        class="animate-fade-right animate-once animate-ease-out w-full lg:w-1/2 sticky top-1 lg:top-1/4 h-fit z-30 mb-4">
+                        class="animate-fade-right animate-once animate-ease-out w-full lg:w-1/2 sticky lg:top-24 top-4 h-fit z-30 mb-4">
 
 
                         <!-- Video player -->
