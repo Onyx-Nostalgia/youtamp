@@ -222,3 +222,11 @@ header {
     animation-timeline: view();
     animation-range: entry 0 exit 100%;
 }
+
+body:not(.app-view-active) #app-view-section {
+    display: none;
+}
+
+body.app-view-active #hero-section {
+    display: none;
+}
