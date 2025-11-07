@@ -1,3 +1,8 @@
+/*
+  TailwindCSS Safelist:
+  bg-primary
+  bg-secondary
+*/
 import { convertToSeconds, convertSecondsToTimestamp } from './utils.js';
 
 export function convertToTimestamp(rawText) {

@@ -9,12 +9,12 @@ export const initializeThemeSwitcher = () => {
         }
     };
 
-    const savedTheme = localStorage.getItem('theme') || 'pastel';
+    const savedTheme = localStorage.getItem('theme') || 'youtamp-light';
     applyTheme(savedTheme);
 
     if (themeController) {
         themeController.addEventListener('change', () => {
-            const theme = themeController.checked ? themeController.value : 'pastel';
+            const theme = themeController.checked ? themeController.value : 'youtamp-light';
             localStorage.setItem('theme', theme);
             applyTheme(theme);
         });

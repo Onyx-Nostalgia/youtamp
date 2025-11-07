@@ -2,8 +2,8 @@
 <div input-section>
     <div class="relative z-10">
         <!-- URL Input -->
-        <label class="input url-input input-primary input-lg w-full rounded-full pr-17 validator mb-4">
-            <svg class="h-[2em] opacity-50 text-primary-content" xmlns="http://www.w3.org/2000/svg" width="24"
+        <label class="input url-input input-primary input-lg w-full rounded-full validator mb-4">
+            <svg class="h-[2em] opacity-80 text-primary" xmlns="http://www.w3.org/2000/svg" width="24"
                 height="24" viewBox="0 0 24 24">
                 <path fill="currentColor" fill-opacity="0" d="M12 11L12 12L12 13z">
                     <animate fill="freeze" attributeName="d" begin="0.6s" dur="0.2s"
@@ -20,7 +20,7 @@
                 pattern="^(https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=|embed\/|v\/|)([^\s&]+))$"
                 placeholder="https://www.youtube.com/watch?v=VIDEO_ID" required>
             <button
-                class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out tooltip tooltip-left"
+                class="btn btn-accent btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out tooltip tooltip-left"
                 data-tip-i18n-key="generate_button_tooltip" data-generate-button>
                 ✒️
             </button>
@@ -32,11 +32,11 @@
     {% if section == 'appview' %} 
          top-12 right-0 lg:left-1/2 lg:transform lg:-translate-x-1/2
     {% else %}
-        md:left-1/2 w-full md:-translate-x-1/2
+        lg:left-1/2 w-full lg:-translate-x-1/2
         bottom-full transform -translate-y-2 max-h-20 sm:max-h-32
     {% endif %}
         overflow-hidden">
-            <figure class="p-0 md:p-2 hidden sm:flex sm:max-w-28 md:max-w-32">
+            <figure class="p-0 lg:p-2 hidden sm:flex sm:max-w-28 lg:max-w-32">
                 <img src="" alt="Thumbnail" data-video-thumbnail class="skeleton rounded-2xl" />
             </figure>
             <div class="card-body relative ml-0">
@@ -62,23 +62,23 @@
     <div class="collapse collapse-arrow">
         <input type="checkbox" class="peer" />
         <div
-            class="collapse-title peer-checked:bg-primary peer-checked:text-primary-content after:start-5 after:end-auto pe-4 ps-12" data-i18n-key="additional_options">
+            class="collapse-title peer-checked:bg-base-200 peer-checked:text-base-content after:start-5 after:end-auto pe-4 ps-12" data-i18n-key="additional_options">
         </div>
-        <div class="collapse-content space-y-4 peer-checked:bg-primary">
+        <div class="collapse-content space-y-4 peer-checked:bg-base-200 shadow-2xl">
             <!-- Additional Details -->
             <fieldset class="fieldset">
                 <legend class="fieldset-legend text-sm"><span data-i18n-key="additional_details_legend"></span><div class="tooltip tooltip-bottom tooltip-xs lg:tooltip-right" data-tip-i18n-key="additional_details_tooltip">
-                        <span class="text-neutral icon-[icon-park-twotone--info]"></span></div></legend>
-                <textarea data-additional-details class="textarea textarea-primary w-full text-sm" rows="4"
+                        <span class="text-base-content opacity-50 icon-[icon-park-twotone--info]"></span></div></legend>
+                <textarea data-additional-details class="textarea w-full text-sm" rows="4"
                     placeholder-i18n-key="additional_details_placeholder"></textarea>
             </fieldset>
             <!-- Language Selection -->
             <fieldset class="fieldset">
                 <legend class="fieldset-legend text-sm">
                     <span data-i18n-key="language_select_legend"></span><div class="tooltip tooltip-xs tooltip-bottom lg:tooltip-right" data-tip-i18n-key="language_select_tooltip">
-                        <span class="text-neutral icon-[icon-park-twotone--info]"></span></div>
+                        <span class="text-base-content opacity-50 icon-[icon-park-twotone--info]"></span></div>
                 </legend>
-                <select data-language-select class="select select-primary">
+                <select data-language-select class="select">
                     <option value="auto" data-i18n-key="lang_auto"></option>
                     <option value="th" data-i18n-key="lang_th_option"></option>
                     <option value="en" data-i18n-key="lang_en_option"></option>

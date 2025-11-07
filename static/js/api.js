@@ -44,7 +44,7 @@ export async function sendData() {
         tabTimestamp.classList.remove("hidden");
 
     } catch (error) {
-        timestampDisplayContent.innerHTML = `<p style="color: red;">❌ Operation Error: ${error.message}</p>`;
+        timestampDisplayContent.innerHTML = `<p class="text-error">❌ Operation Error: ${error.message}</p>`;
         console.error('Operation Error:', error);
         tabLoading.classList.add('hidden');
         tabTimestamp.classList.add("hidden");

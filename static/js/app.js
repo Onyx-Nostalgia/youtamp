@@ -217,14 +217,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const button = copyBtn.querySelector(".btn");
             navigator.clipboard.writeText(textToCopy).then(() => {
                 button.innerHTML = `<span class="icon-[tabler--copy-check-filled] text-xl"></span>`;
-                button.classList.remove("btn-info");
+                button.classList.remove("btn-primary");
                 button.classList.add("btn-success");
                 copyBtn.classList.add("tooltip-open");
                 copyBtn.classList.add("tooltip-success");
                 copyBtn.setAttribute("data-tip", "Copied!");
                 setTimeout(() => {
                     button.innerHTML = `<span class="icon-[tabler--copy] text-xl"></span>`;
-                    button.classList.add("btn-info");
+                    button.classList.add("btn-primary");
                     button.classList.remove("btn-success");
                     copyBtn.classList.remove("tooltip-open");
                     copyBtn.classList.remove("tooltip-success");
