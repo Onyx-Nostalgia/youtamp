@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th" data-theme="pastel">
+<html lang="th" data-theme="youtamp-light">
 
 <head>
     <meta charset="UTF-8">
@@ -14,9 +14,16 @@
 </head>
 
 <body class="overflow-x-hidden font-sans">
-{% include '_timestamp_display.html' %}
 
-<script src="/static/app.js"></script>
+    <!-- Footer Demonstration -->
+    <footer class="footer z-20 px-2 py-4 bg-base-300 text-base-content bg-[url('/static/svg/layered-waves-haikei.svg')] bg-cover bg-center">
+        <div class="container mx-auto p-8 text-white">
+            <h2 class="text-2xl font-bold">Footer Content</h2>
+            <p>This text is placed over the SVG background.</p>
+        </div>
+    </footer>
+
+<script src="/static/js/app.js" type="module"></script>
 </body>
 
 </html>
