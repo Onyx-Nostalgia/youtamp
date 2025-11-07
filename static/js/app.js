@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     homeButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
-            document.body.classList.remove('app-view-active');
+            document.body.classList.remove('app-view-active'); 
+            location.reload();
         });
     });
 
