@@ -21,8 +21,8 @@
                 value="https://www.youtube.com/watch?v=4Jb35R2MZ_c"
                 placeholder="https://www.youtube.com/watch?v=EclZTQRX2-M" required>
             <button
-                class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out tooltip tooltip-left" data-tip="คลิกเพื่อสร้าง Timestamp จากวิดีโอ YouTube"
-                data-generate-button>
+                class="btn btn-primary btn-circle btn-xl hover:btn-neutral hover:scale-110 hover:border-0 absolute right-2 transition delay-150 duration-300 ease-in-out tooltip tooltip-left"
+                data-tip="สร้าง Timestamp" data-generate-button>
                 ✒️
             </button>
 
@@ -36,7 +36,7 @@
         md:left-1/2 w-full md:-translate-x-1/2
         bottom-full transform -translate-y-2 max-h-20 sm:max-h-32
     {% endif %}
-        overflow-hidden" >
+        overflow-hidden">
             <figure class="p-0 md:p-2 hidden sm:flex sm:max-w-28 md:max-w-32">
                 <img src="" alt="Thumbnail" data-video-thumbnail class="skeleton rounded-2xl" />
             </figure>
@@ -68,15 +68,17 @@
         </div>
         <div class="collapse-content space-y-4 peer-checked:bg-primary">
             <!-- Additional Details -->
-            <fieldset class="fieldset tooltip tooltip-bottom" data-tip="เพิ่มคำแนะนำพิเศษสำหรับ AI เช่น 'อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก'">
-                <legend class="fieldset-legend text-sm">รายละเอียดเพิ่มเติม</legend>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend text-sm">รายละเอียดเพิ่มเติม<div class="tooltip tooltip-bottom tooltip-xs lg:tooltip-right tooltip-info" data-tip="เพิ่มคำแนะนำพิเศษสำหรับ AI เพื่อ timestamp ที่ตรงใจมากขึ้น">
+                        <span class="text-neutral icon-[icon-park-twotone--info]"></span></div></legend>
                 <textarea data-additional-details class="textarea textarea-primary w-full text-sm" rows="4"
                     placeholder="เช่น อยากได้ timestamp สัก 10 รายการ, เจาะจงเฉพาะส่วนที่เป็นสาระหลัก"></textarea>
             </fieldset>
             <!-- Language Selection -->
-            <fieldset class="fieldset tooltip tooltip-bottom" data-tip="เลือกภาษาสำหรับ Timestamp ที่จะสร้าง">
+            <fieldset class="fieldset">
                 <legend class="fieldset-legend text-sm">
-                    ภาษาผลลัพธ์
+                    ภาษาผลลัพธ์<div class="tooltip tooltip-xs tooltip-bottom lg:tooltip-right tooltip-info" data-tip="ภาษาผลลัพธ์ของ timestamp">
+                        <span class="text-neutral icon-[icon-park-twotone--info]"></span></div>
                 </legend>
                 <select data-language-select class="select select-primary">
                     <option value="auto">ตามภาษาของวิดีโอ (Default)</option>
