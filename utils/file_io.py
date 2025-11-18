@@ -2,6 +2,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 import aiofiles
+
 import config
 
 
@@ -22,7 +23,11 @@ async def async_read_file(
     filename: str,
     base_dir_name: Path = config.ARTIFACTS_DIR,
 ) -> str:
-    file_path = Path(base_dir_name) / filename
+    f_path = Path(filename)
+    if f_path.parts and f_path.parts[0] == Path(base_dir_name).name:
+        file_path = f_path
+    else:
+        file_path = Path(base_dir_name) / f_path
     async with aiofiles.open(file_path) as f:
         data = await f.read()
     print(f"📄  File loaded: `{file_path}`")
@@ -73,8 +78,12 @@ def write_file(
 
 
 def read_file(filename: str, base_dir_name: Path = config.ARTIFACTS_DIR) -> str:
-    file_path = Path(base_dir_name) / filename
-    with Path.open(file_path) as f:
+    f_path = Path(filename)
+    if f_path.parts and f_path.parts[0] == Path(base_dir_name).name:
+        file_path = f_path
+    else:
+        file_path = Path(base_dir_name) / f_path
+    with file_path.open() as f:
         data = f.read()
     print(f"📄  File loaded: `{file_path}`")
     return data
@@ -105,6 +114,6 @@ def load_prompt_from_file(folder_name: str) -> str | None:
 
 
 def save_response_to_file(response: str, folder_name: str) -> None:
-    filename = f"{folder_name}/response.json"
+    filename = f"{folder_name}/response.txt"
     if config.SAVE_RESPONSE:
         write_file(response, filename)
