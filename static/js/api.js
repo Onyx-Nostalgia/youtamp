@@ -44,9 +44,9 @@ export async function sendData() {
         tabTimestamp.classList.remove("hidden");
 
     } catch (error) {
-        timestampDisplayContent.innerHTML = `<p class="text-error">❌ Operation Error: ${error.message}</p>`;
+        tabLoading.innerHTML = `<p class="text-error">❌ Operation Error: ${error.message}</p>`;
         console.error('Operation Error:', error);
-        tabLoading.classList.add('hidden');
+        tabLoading.classList.remove('hidden');
         tabTimestamp.classList.add("hidden");
     }
 }

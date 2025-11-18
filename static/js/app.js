@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     homeButtons.forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
-            document.body.classList.remove('app-view-active'); 
+            document.body.classList.remove('app-view-active');
             location.reload();
         });
     });
@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (generateButton) {
-            generateButton.addEventListener('click', () => {
+            generateButton.addEventListener('click', async () => {
                 const url = youtubeUrlInput.value.trim();
                 if (!validateUrl(url)) {
                     urlInput.classList.add('animate-shake');
@@ -157,37 +157,66 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const videoId = getVideoIdFromUrl(url);
-                if (videoId) {
-                    youtubeVideoPlayer.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
-                }
+                const icon = generateButton.querySelector('span:not(.loading)');
+                const spinner = generateButton.querySelector('.loading');
 
-                const heroInputSection = heroSection.querySelector('[input-section]');
-                const appViewInputSection = appViewSection.querySelector('[input-section]');
+                generateButton.disabled = true;
+                icon.classList.add('hidden');
+                spinner.classList.remove('hidden');
 
-                if (inputSection === heroInputSection) {
-                    const heroUrlValue = youtubeUrlInput.value;
-                    const heroAdditionalDetailsValue = additionalDetailsTextarea ? additionalDetailsTextarea.value : '';
-                    const heroLanguageSelectValue = languageSelect ? languageSelect.value : 'auto';
+                let appViewGenerateBtn;
+                let appViewIcon;
+                let appViewSpinner;
+                try {
+                    const videoId = getVideoIdFromUrl(url);
+                    if (videoId) {
+                        youtubeVideoPlayer.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
+                    }
 
-                    const appViewUrlInput = appViewInputSection.querySelector('[data-youtube-url-input]');
-                    const appViewAdditionalDetailsTextarea = appViewInputSection.querySelector('[data-additional-details]');
-                    const appViewLanguageSelect = appViewInputSection.querySelector('[data-language-select]');
+                    const heroInputSection = heroSection.querySelector('[input-section]');
+                    const appViewInputSection = appViewSection.querySelector('[input-section]');
 
-                    if (appViewUrlInput) appViewUrlInput.value = heroUrlValue;
-                    if (appViewAdditionalDetailsTextarea) appViewAdditionalDetailsTextarea.value = heroAdditionalDetailsValue;
-                    if (appViewLanguageSelect) appViewLanguageSelect.value = heroLanguageSelectValue;
+                    if (inputSection === heroInputSection) {
+                        const heroUrlValue = youtubeUrlInput.value;
+                        const heroAdditionalDetailsValue = additionalDetailsTextarea ? additionalDetailsTextarea.value : '';
+                        const heroLanguageSelectValue = languageSelect ? languageSelect.value : 'auto';
 
-                    if (appViewUrlInput) {
-                        handleUrlChangeForSection(appViewInputSection);
+                        const appViewUrlInput = appViewInputSection.querySelector('[data-youtube-url-input]');
+                        const appViewAdditionalDetailsTextarea = appViewInputSection.querySelector('[data-additional-details]');
+                        const appViewLanguageSelect = appViewInputSection.querySelector('[data-language-select]');
+                        appViewGenerateBtn = appViewInputSection.querySelector('[data-generate-button]');
+                        appViewIcon = appViewGenerateBtn ? appViewGenerateBtn.querySelector('span:not(.loading)') : "";
+                        appViewSpinner = appViewGenerateBtn ? appViewGenerateBtn.querySelector('.loading') : "";
+
+                        if (appViewUrlInput) appViewUrlInput.value = heroUrlValue;
+                        if (appViewAdditionalDetailsTextarea) appViewAdditionalDetailsTextarea.value = heroAdditionalDetailsValue;
+                        if (appViewLanguageSelect) appViewLanguageSelect.value = heroLanguageSelectValue;
+                        if (appViewGenerateBtn) {
+                            appViewGenerateBtn.disabled = generateButton.disabled;
+                            appViewIcon = icon;
+                            appViewSpinner = spinner;
+                        };
+
+                        if (appViewUrlInput) {
+                            handleUrlChangeForSection(appViewInputSection);
+                        }
+                    }
+
+                    document.body.classList.add('app-view-active');
+
+                    initializeStickyTabBarObserver();
+
+                    await sendData();
+                } finally {
+                    generateButton.disabled = false;
+                    icon.classList.remove('hidden');
+                    spinner.classList.add('hidden');
+                    if(appViewGenerateBtn){
+                        appViewGenerateBtn.disabled = generateButton.disabled;
+                        appViewIcon = icon;
+                        appViewSpinner = spinner;
                     }
                 }
-
-                document.body.classList.add('app-view-active');
-
-                initializeStickyTabBarObserver();
-
-                sendData();
             });
         }
     });
