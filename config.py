@@ -1,5 +1,8 @@
+import logging
 import os
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def get_bool_env(name: str, default: str = "False") -> bool:
@@ -10,7 +13,10 @@ def get_bool_env(name: str, default: str = "False") -> bool:
 # --- Gemini API ---
 API_KEY: str | None = os.environ.get("GEMINI_API_KEY")
 if not API_KEY:
+    logger.error("GEMINI_API_KEY not found!")
     raise ValueError("GEMINI_API_KEY environment variable not set.")
+else:
+    logger.info("GEMINI_API_KEY loaded.")
 
 # --- Prompt Engineering ---
 LOAD_PROMPT: bool = get_bool_env("LOAD_PROMPT")

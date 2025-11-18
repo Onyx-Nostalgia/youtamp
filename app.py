@@ -1,38 +1,17 @@
-import logging
-from logging.handlers import RotatingFileHandler
 import os
-from pathlib import Path
 
 from flask import Flask, render_template, request
 
 from services import video_processor
 from utils import file_io
-
-# ============================================================================
-# Logging Configuration
-# ============================================================================
-# Create logs directory if it doesn't exist
-if not Path("logs").exists():
-    Path.mkdir("logs",parents=True)
-
-# Set up a rotating file handler
-file_handler = RotatingFileHandler(
-    "logs/app.log", maxBytes=10240, backupCount=10
-)
-file_handler.setFormatter(
-    logging.Formatter(
-        "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
-    )
-)
-file_handler.setLevel(logging.INFO)
+from utils.logging_config import setup_logging
 
 # ============================================================================
 # App Configuration
 # ============================================================================
 
 app = Flask(__name__)
-app.logger.addHandler(file_handler)
-app.logger.setLevel(logging.INFO)
+setup_logging(app)
 
 
 @app.before_request
@@ -40,7 +19,6 @@ def log_request_info():
     app.logger.info(
         "Request: %s %s from %s", request.method, request.path, request.remote_addr
     )
-
 
 
 @app.route("/", methods=["GET"])
@@ -91,4 +69,4 @@ async def generate_timestamps() -> str | tuple[str, int]:
 if __name__ == "__main__":
     app.logger.info("Starting Youtamp development server.")
     # In a production environment, use a proper WSGI server like Gunicorn or uWSGI
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=True, host="0.0.0.0", port=45334)

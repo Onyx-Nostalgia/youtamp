@@ -1,11 +1,16 @@
 import argparse
 import asyncio
+import logging
 from pathlib import Path
 import sys
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from services import video_processor
+
+# Configure basic logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 async def main():
@@ -18,7 +23,7 @@ async def main():
     # 2. Define arguments
 
     # --- URL Group (supports both positional and -u flag) ---
-    # Technique: Create an optional positional argument (?) 
+    # Technique: Create an optional positional argument (?)
     # to capture the URL if no flag is provided
     parser.add_argument("url_pos", nargs="?", help="YouTube URL")
 
@@ -52,23 +57,24 @@ async def main():
     target_url = args.url_flag or args.url_pos
 
     if not target_url:
+        logger.warning("No URL provided. Displaying help.")
         parser.print_help()
         sys.exit(1)  # Exit with error code
 
-    print("[*] Processing...")
-    print(f"    URL:      {target_url}")
-    print(f"    Language: {args.lang}")
+    logger.info("CLI processing started.")
+    logger.info(f"URL: {target_url}")
+    logger.info(f"Language: {args.lang}")
     if args.additional_instruction:
-        print(
-            f"    Prompt:   {args.additional_instruction}"
-        )
+        logger.info(f"Prompt: {args.additional_instruction}")
 
     try:
         result = await video_processor.process_video_timestamp(
             url=target_url, additional_instruction="", language=args.lang
         )
+        logger.info("Timestamps generated successfully.")
         print(result)
     except Exception as e:
+        logger.error(f"CLI processing failed: {e}", exc_info=True)
         print(f"\n[Error] {e!s}")
         sys.exit(1)
 

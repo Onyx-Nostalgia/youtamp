@@ -1,3 +1,4 @@
+import logging
 from aiolimiter import AsyncLimiter
 from google import genai
 from google.genai.errors import APIError
@@ -6,6 +7,8 @@ from tenacity import retry, retry_if_exception, stop_after_attempt, wait_exponen
 import config
 from utils import file_io
 
+logger = logging.getLogger(__name__)
+
 
 def is_gemini_overloaded(exception):
     """
@@ -13,22 +16,27 @@ def is_gemini_overloaded(exception):
     Args:
         exception (Exception): The exception object to check, typically raised during API calls.
     Returns:
-        bool: True if the exception corresponds to an overloaded 
+        bool: True if the exception corresponds to an overloaded
         or rate-limited API (HTTP 503 or 429), False otherwise.
     Notes:
         - HTTP 503 indicates the service is temporarily unavailable or overloaded.
         - HTTP 429 indicates the rate limit has been exceeded.
     """
     if isinstance(exception, APIError):
-        error_code = getattr(exception, 'code', None) or getattr(exception, 'status_code', None)
-        
+        error_code = getattr(exception, "code", None) or getattr(
+            exception, "status_code", None
+        )
+
         if error_code in [503, 429]:
             # 503:  "UNAVAILABLE" The service may be temporarily overloaded or down
             # 429:  "RESOURCE_EXHAUSTED" You've exceeded the rate limit.
-            print(f"⚠️ Found Error {error_code} (Overloaded/Limit) -> Retry...")
+            logger.warning(
+                f"API overloaded/rate-limited (Code: {error_code}). Retrying..."
+            )
             return True
-            
+
     return False
+
 
 # RPM 10 = 10 requests per 60 seconds
 RATE_LIMITER = AsyncLimiter(max_rate=9, time_period=60)
@@ -53,7 +61,7 @@ You are an intelligent video content analyzer. Your task is to extract timestamp
 **Instructions:**
 
 1. **Analyze Content & Strategy:**
-   - **Determine Content Type:** 
+   - **Determine Content Type:**
      - First, read the transcript to determine the nature of the content and apply the extraction logic accordingly
      - **Q&A / Interview:** If the content consists of questions, you MUST extract **every single question** start time.
      - **Tutorial / Step-by-Step:** Extract every major step.
@@ -82,12 +90,14 @@ You are an intelligent video content analyzer. Your task is to extract timestamp
 10:45 - Summary
 """
 
+
 def generate_prompt(
     captions: str,
     additional_instructions: str,
     video_id: str,
     language: str = "Same as Transcript",
 ) -> str:
+    logger.info(f"Generating prompt for {video_id}")
     transcript = f"""
 **Target Language:** {language}
 **Here is the transcript:**
@@ -96,14 +106,18 @@ def generate_prompt(
 
     prompt_from_file = file_io.load_prompt_from_file(video_id)
     if prompt_from_file:
+        logger.info(f"Loaded prompt from file for {video_id}")
         return prompt_from_file
 
-    return additional_instructions + transcript
+    prompt = additional_instructions + transcript
+    logger.info(f"Generated new prompt for {video_id}")
+    return prompt
+
 
 @retry(
-    stop=stop_after_attempt(5), 
+    stop=stop_after_attempt(5),
     wait=wait_exponential(multiplier=1, min=4, max=20),
-    retry=retry_if_exception(is_gemini_overloaded)
+    retry=retry_if_exception(is_gemini_overloaded),
 )
 async def evaluate_timestamps(
     captions: str,
@@ -111,17 +125,29 @@ async def evaluate_timestamps(
     video_id: str = "",
     language: str = "Same as Transcript",
 ) -> list[str]:
-    
     async with RATE_LIMITER:
-        prompt = generate_prompt(captions, additional_instructions, video_id,language)
+        logger.info(f"Evaluating timestamps for {video_id}")
+        prompt = generate_prompt(captions, additional_instructions, video_id, language)
         await file_io.async_save_prompt_to_file(prompt, video_id)
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt,
-            config={**generation_config, "system_instruction": system_instruction},
-        )
-        await file_io.async_save_response_to_file(response.text, video_id)
+        try:
+            logger.info(f"Calling Gemini API for {video_id}")
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+                config={**generation_config, "system_instruction": system_instruction},
+            )
+            logger.info(f"API response received for {video_id}")
+            await file_io.async_save_response_to_file(response.text, video_id)
 
-        output = [line.strip() for line in response.text.strip().split('\n') if line.strip()]
-        return output
+            output = [
+                line.strip() for line in response.text.strip().split("\n") if line.strip()
+            ]
+            logger.info(f"Timestamps processed for {video_id}")
+            return output
+        except Exception as e:
+            logger.error(
+                f"API call failed for {video_id}: {e}",
+                exc_info=True,
+            )
+            raise
