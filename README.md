@@ -2,10 +2,17 @@
 
 <div align="center">
 
-## Desktop/Mobile Preview
 
-<img src="./docs/images/youtamp-1.gif" weight=200 height=300 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
-<img src="./docs/images/youtamp-mb.gif" height=300 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+<img src="./docs/images/hero-dark (Small).png" height=300 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+
+<img src="./docs/images/app-dark (Small).png" weight=200 height=300 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+
+<details>
+<summary><b>See Light Theme</b></summary>
+<img src="./docs/images/hero-light (Small).png" height=300 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+
+<img src="./docs/images/app-light (Small).png" weight=200 height=300 alt="Description" style="border-radius: 20px;box-shadow: 5px 5px 10px \#888;">
+</details>
 
 
 <h3>A simple web application for YouTube timestamp creation.</h3>
