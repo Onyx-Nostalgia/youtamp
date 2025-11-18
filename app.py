@@ -1,88 +1,94 @@
-import argparse
-from collections.abc import Iterable
+import logging
+from logging.handlers import RotatingFileHandler
+import os
+from pathlib import Path
 
 from flask import Flask, render_template, request
 
-from services import gemini, youtube
+from services import video_processor
 from utils import file_io
 
+# ============================================================================
+# Logging Configuration
+# ============================================================================
+# Create logs directory if it doesn't exist
+if not Path("logs").exists():
+    Path.mkdir("logs",parents=True)
+
+# Set up a rotating file handler
+file_handler = RotatingFileHandler(
+    "logs/app.log", maxBytes=10240, backupCount=10
+)
+file_handler.setFormatter(
+    logging.Formatter(
+        "%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]"
+    )
+)
+file_handler.setLevel(logging.INFO)
+
+# ============================================================================
+# App Configuration
+# ============================================================================
+
 app = Flask(__name__)
+app.logger.addHandler(file_handler)
+app.logger.setLevel(logging.INFO)
 
 
-def format_timestamps(timestamps: Iterable[str]) -> str:
-    return "\n".join(timestamps)
+@app.before_request
+def log_request_info():
+    app.logger.info(
+        "Request: %s %s from %s", request.method, request.path, request.remote_addr
+    )
 
-def format_language(language: str) -> list[str]:
-    if language.lower() == "auto":
-        return ["th"]
-    return [language.lower()]
 
 
 @app.route("/", methods=["GET"])
 def index() -> str:
-    return render_template(app.config["HTML_FILE"])
+    # Default to index.html, can be overridden by environment variable or other config
+    html_file = os.environ.get("HTML_FILE", "index.html")
+    return render_template(html_file)
 
 
 @app.route("/api/timestamp/generate", methods=["POST"])
 async def generate_timestamps() -> str | tuple[str, int]:
     if request.method == "POST":
-        error = ""
-        timestamps = ""
-        if app.config["MOCK"]:
-            timestamps = await file_io.async_read_file(app.config["MOCK"])
-            return timestamps, 200
+        # MOCK_FILE env var can be used for testing
+        mock_file = os.environ.get("MOCK_FILE")
+        if mock_file:
+            app.logger.info(f"Mock mode enabled. Reading from {mock_file}")
+            try:
+                timestamps = await file_io.async_read_file(mock_file)
+                return timestamps, 200
+            except Exception:
+                app.logger.exception("Error reading mock file")
+                return "Error reading mock file", 500
+
         try:
             data = request.get_json()
+            if not data or "url" not in data:
+                app.logger.warning("Bad Request: 'url' missing from request body")
+                return "Error: 'url' is a required field.", 400
+
             url = data.get("url")
             additional_instruction = data.get("additional_instruction", "")
             language = data.get("language", "auto")
 
-            video_id = youtube.extract_video_id(url)
-            language = format_language(language)
-
-            captions_list = await youtube.async_get_transcript_lines(video_id, language)
-            captions = "\n".join(captions_list)
-
-            raw_output = await gemini.async_evaluate_timestamps(
-                captions,
-                additional_instruction,
-                video_id,
+            app.logger.info(f"Processing timestamp for URL: {url}")
+            timestamps = await video_processor.process_video_timestamp(
+                url, additional_instruction, language
             )
+            app.logger.info(f"Successfully generated timestamps for URL: {url}")
+            return timestamps, 200
 
-            await file_io.async_save_timestamps_to_file(raw_output, video_id)
+        except Exception:
+            app.logger.exception("An unexpected error occurred during timestamp generation.")
+            return "An internal server error occurred.", 500
 
-            timestamps = format_timestamps(raw_output)
-
-        except Exception as e:
-            error = f"Error: {e!s}"
-
-        if error:
-            return error, 400
-        return timestamps, 200
-    return "", 405
-
-
-def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Run the Flask app with a specified HTML template."
-    )
-    parser.add_argument(
-        "--file",
-        type=str,
-        default="index.html",
-        help="The HTML file to render (e.g., 'index.html').",
-    )
-    parser.add_argument(
-        "--mock",
-        type=str,
-        default=None,
-        help="Enable mock mode by providing a path to a mock file relative to the 'artifacts' directory (e.g., '4Jb35R2MZ_c/timestamps.txt').",
-    )
-    args = parser.parse_args()
-    app.config["HTML_FILE"] = args.file
-    app.config["MOCK"] = args.mock
-    app.run(debug=True)
+    return "Method Not Allowed", 405
 
 
 if __name__ == "__main__":
-    main()
+    app.logger.info("Starting Youtamp development server.")
+    # In a production environment, use a proper WSGI server like Gunicorn or uWSGI
+    app.run(debug=True, host="0.0.0.0", port=5000)
