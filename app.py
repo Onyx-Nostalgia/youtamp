@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask, render_template, request
+from youtube_transcript_api import TranscriptsDisabled
 
 from services import video_processor
 from utils import file_io
@@ -59,6 +60,9 @@ async def generate_timestamps() -> str | tuple[str, int]:
             app.logger.info(f"Successfully generated timestamps for URL: {url}")
             return timestamps, 200
 
+        except TranscriptsDisabled as e:
+            app.logger.warning(f"Transcripts are disabled for URL {data.get('url', '')}: {e}")
+            return "Could not generate timestamps because transcripts are disabled for this video.", 400
         except Exception:
             app.logger.exception("An unexpected error occurred during timestamp generation.")
             return "An internal server error occurred.", 500
